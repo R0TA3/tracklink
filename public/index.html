@@ -3,477 +3,870 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>TrackLink</title>
-<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<title>TrackLink — by a3achu</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <style>
 :root {
-  --bg:#0a0a0f; --surface:#111118; --card:#16161f; --border:#1e1e2e;
-  --accent:#00e5ff; --accent2:#7c3aed; --danger:#ff4757; --success:#00e676; --warn:#ffd600;
-  --text:#e8e8f0; --muted:#6b6b80;
+  --bg:#080810; --surface:#0f0f1a; --card:#13131f; --border:#1c1c2e;
+  --accent:#00e5ff; --accent2:#7c3aed; --success:#00e676; --warn:#ffd600;
+  --danger:#ff4757; --text:#e8e8f4; --muted:#5a5a72;
   --mono:'Space Mono',monospace; --sans:'DM Sans',sans-serif;
 }
-*{box-sizing:border-box;margin:0;padding:0}
-body{background:var(--bg);color:var(--text);font-family:var(--sans);min-height:100vh;overflow-x:hidden}
-body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(0,229,255,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(0,229,255,.03) 1px,transparent 1px);background-size:40px 40px;pointer-events:none;z-index:0}
-body::after{content:'';position:fixed;top:-200px;left:50%;transform:translateX(-50%);width:600px;height:400px;background:radial-gradient(ellipse,rgba(124,58,237,.15) 0%,transparent 70%);pointer-events:none;z-index:0}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--text);font-family:var(--sans);min-height:100vh;}
+body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+  background-image:linear-gradient(rgba(0,229,255,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(0,229,255,.025) 1px,transparent 1px);
+  background-size:44px 44px;}
+body::after{content:'';position:fixed;top:-250px;left:50%;transform:translateX(-50%);
+  width:700px;height:500px;pointer-events:none;z-index:0;
+  background:radial-gradient(ellipse,rgba(124,58,237,.12) 0%,transparent 65%);}
 
-/* HEADER */
-header{position:relative;z-index:10;display:flex;align-items:center;justify-content:space-between;padding:18px 36px;border-bottom:1px solid var(--border);background:rgba(10,10,15,.85);backdrop-filter:blur(12px)}
-.logo{font-family:var(--mono);font-size:17px;color:var(--accent);display:flex;align-items:center;gap:9px}
-.logo-dot{width:8px;height:8px;background:var(--accent);border-radius:50%;animation:pulse 2s infinite}
-@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(1.4)}}
-nav{display:flex;gap:6px}
-.nav-btn{font-family:var(--sans);font-size:13px;font-weight:500;color:var(--muted);background:none;border:1px solid transparent;padding:7px 15px;border-radius:6px;cursor:pointer;transition:all .2s}
-.nav-btn:hover,.nav-btn.active{color:var(--text);border-color:var(--border);background:var(--card)}
-.nav-btn.active{color:var(--accent);border-color:rgba(0,229,255,.3)}
+/* ── LOGIN PAGE ── */
+#login-page {
+  display:flex;align-items:center;justify-content:center;
+  min-height:100vh;position:relative;z-index:10;
+}
+.login-box {
+  background:var(--card);border:1px solid var(--border);border-radius:20px;
+  padding:44px 40px;width:100%;max-width:400px;
+  box-shadow:0 0 60px rgba(0,229,255,.06);animation:fadeIn .5s ease;
+}
+@keyframes fadeIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+.login-logo {
+  text-align:center;margin-bottom:32px;cursor:pointer;
+  transition:transform .2s;
+}
+.login-logo:hover{transform:scale(1.05);}
+.a3-logo {
+  width:72px;height:72px;margin:0 auto 12px;
+  background:linear-gradient(135deg,var(--accent2),var(--accent));
+  border-radius:18px;display:flex;align-items:center;justify-content:center;
+  font-family:var(--mono);font-size:26px;font-weight:700;color:#fff;
+  box-shadow:0 8px 32px rgba(0,229,255,.2);
+}
+.login-title{font-size:22px;font-weight:600;margin-bottom:4px;}
+.login-sub{font-size:13px;color:var(--muted);}
+.login-field{margin-bottom:16px;}
+.login-field label{font-size:12px;color:var(--muted);font-weight:500;margin-bottom:7px;display:block;}
+.login-field input{
+  width:100%;background:var(--surface);border:1px solid var(--border);
+  color:var(--text);font-family:var(--sans);font-size:14px;
+  padding:12px 14px;border-radius:10px;outline:none;transition:border-color .2s;
+}
+.login-field input:focus{border-color:rgba(0,229,255,.4);}
+.login-btn{
+  width:100%;padding:13px;background:linear-gradient(135deg,var(--accent2),var(--accent));
+  color:#fff;font-family:var(--sans);font-size:15px;font-weight:600;
+  border:none;border-radius:10px;cursor:pointer;transition:all .2s;margin-top:4px;
+}
+.login-btn:hover{transform:translateY(-1px);box-shadow:0 6px 24px rgba(0,229,255,.25);}
+.login-err{color:var(--danger);font-size:13px;text-align:center;margin-top:10px;display:none;}
+.login-footer{text-align:center;margin-top:24px;font-size:12px;color:var(--muted);}
+.login-footer a{color:var(--accent);text-decoration:none;}
 
-/* MAIN */
-main{position:relative;z-index:5;max-width:980px;margin:0 auto;padding:56px 22px 80px}
+/* ── MAIN APP ── */
+#app{display:none;}
 
-/* HERO */
-.hero{text-align:center;margin-bottom:50px}
-.hero-badge{display:inline-flex;align-items:center;gap:7px;font-family:var(--mono);font-size:11px;color:var(--accent);border:1px solid rgba(0,229,255,.25);background:rgba(0,229,255,.06);padding:5px 14px;border-radius:100px;margin-bottom:22px;letter-spacing:1px;text-transform:uppercase}
-.hero h1{font-size:clamp(30px,5vw,52px);font-weight:600;line-height:1.1;letter-spacing:-1.5px;margin-bottom:14px}
-.hero h1 span{background:linear-gradient(90deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
-.hero p{font-size:16px;color:var(--muted);max-width:460px;margin:0 auto;line-height:1.65;font-weight:300}
+/* ── HEADER ── */
+header{
+  position:sticky;top:0;z-index:100;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:14px 32px;border-bottom:1px solid var(--border);
+  background:rgba(8,8,16,.9);backdrop-filter:blur(16px);
+}
+.header-left{display:flex;align-items:center;gap:14px;}
+.a3-mini{
+  width:36px;height:36px;background:linear-gradient(135deg,var(--accent2),var(--accent));
+  border-radius:9px;display:flex;align-items:center;justify-content:center;
+  font-family:var(--mono);font-size:13px;font-weight:700;color:#fff;
+  cursor:pointer;transition:transform .2s;flex-shrink:0;
+}
+.a3-mini:hover{transform:scale(1.1);}
+.logo{font-family:var(--mono);font-size:16px;color:var(--accent);display:flex;align-items:center;gap:8px;}
+.logo-dot{width:7px;height:7px;background:var(--success);border-radius:50%;animation:blink 2s infinite;}
+@keyframes blink{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.3;transform:scale(1.5)}}
+nav{display:flex;gap:3px;}
+.nav-btn{
+  font-size:13px;font-weight:500;padding:7px 16px;border-radius:7px;
+  border:1px solid transparent;color:var(--muted);background:none;cursor:pointer;transition:all .2s;
+}
+.nav-btn:hover{color:var(--text);border-color:var(--border);background:var(--card);}
+.nav-btn.active{color:var(--accent);border-color:rgba(0,229,255,.25);background:rgba(0,229,255,.05);}
+.header-right{display:flex;align-items:center;gap:10px;}
+.user-chip{
+  font-size:12px;color:var(--muted);background:var(--surface);
+  border:1px solid var(--border);padding:6px 12px;border-radius:20px;
+  display:flex;align-items:center;gap:6px;
+}
+.user-dot{width:6px;height:6px;background:var(--success);border-radius:50%;}
+.logout-btn{
+  font-size:12px;padding:6px 12px;border-radius:7px;border:1px solid var(--border);
+  background:none;color:var(--muted);cursor:pointer;transition:all .2s;
+}
+.logout-btn:hover{color:var(--danger);border-color:rgba(255,71,87,.3);}
 
-/* CARDS */
-.card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:26px;margin-bottom:18px}
-.card-label{font-size:11px;font-family:var(--mono);color:var(--muted);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:14px;display:flex;align-items:center;gap:8px}
-.card-label::before{content:'';width:3px;height:14px;background:var(--accent);border-radius:2px}
+/* ── MAIN ── */
+main{position:relative;z-index:5;max-width:1200px;margin:0 auto;padding:40px 24px 80px;}
 
-/* FORM */
-.row{display:flex;gap:10px;margin-bottom:12px;flex-wrap:wrap}
-.field{flex:1;min-width:180px}
-label.lbl{display:block;font-size:12px;color:var(--muted);font-weight:500;margin-bottom:6px}
-input[type=text],input[type=url],select{width:100%;background:var(--surface);border:1px solid var(--border);color:var(--text);font-family:var(--sans);font-size:14px;padding:10px 13px;border-radius:8px;outline:none;transition:border-color .2s}
-input:focus,select:focus{border-color:rgba(0,229,255,.4)}
-input::placeholder{color:var(--muted)}
-select option{background:var(--surface)}
+/* ── VIEWS ── */
+.view{display:none;} .view.active{display:block;}
 
-.btn{font-family:var(--sans);font-size:14px;font-weight:600;padding:10px 22px;border-radius:8px;border:none;cursor:pointer;transition:all .18s;white-space:nowrap}
-.btn-primary{background:var(--accent);color:#000}
-.btn-primary:hover{background:#33ebff;transform:translateY(-1px);box-shadow:0 4px 20px rgba(0,229,255,.3)}
-.btn-outline{background:none;color:var(--text);border:1px solid var(--border)}
-.btn-outline:hover{border-color:var(--accent);color:var(--accent)}
-.btn-sm{font-size:12px;padding:6px 14px}
-.btn-danger{background:rgba(255,71,87,.1);color:var(--danger);border:1px solid rgba(255,71,87,.25)}
-.btn-danger:hover{background:rgba(255,71,87,.2)}
+/* ── STATS ── */
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:28px;}
+@media(max-width:700px){.stats-grid{grid-template-columns:repeat(2,1fr);}}
+.stat-card{
+  background:var(--card);border:1px solid var(--border);border-radius:14px;
+  padding:20px;position:relative;overflow:hidden;transition:border-color .2s;
+}
+.stat-card:hover{border-color:rgba(0,229,255,.2);}
+.stat-card::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,var(--accent),var(--accent2));
+  transform:scaleX(0);transform-origin:left;transition:transform .4s;}
+.stat-card:hover::after{transform:scaleX(1);}
+.stat-val{font-family:var(--mono);font-size:30px;font-weight:700;line-height:1;margin-bottom:6px;}
+.stat-lbl{font-size:11px;color:var(--muted);font-weight:500;text-transform:uppercase;letter-spacing:.8px;}
+.stat-sub{font-size:11px;color:var(--muted);margin-top:4px;}
 
-/* RESULT */
-.result-box{display:none;margin-top:16px;background:var(--surface);border:1px solid rgba(0,229,255,.25);border-radius:10px;padding:14px 16px;gap:10px;flex-wrap:wrap;animation:fadeUp .3s ease}
-.result-box.show{display:flex;align-items:center}
-.result-url{font-family:var(--mono);font-size:13px;color:var(--accent);flex:1;word-break:break-all}
-@keyframes fadeUp{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+/* ── CARD ── */
+.card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:22px 24px;margin-bottom:18px;}
+.card-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;flex-wrap:wrap;gap:10px;}
+.card-title{font-size:11.5px;font-family:var(--mono);color:var(--muted);text-transform:uppercase;letter-spacing:1.5px;display:flex;align-items:center;gap:8px;}
+.card-title::before{content:'';width:3px;height:13px;background:var(--accent);border-radius:2px;}
 
-/* STATS */
-.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:13px;margin-bottom:22px}
-.stat{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:18px;position:relative;overflow:hidden}
-.stat::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:var(--accent);opacity:.4;transform:scaleX(.35);transform-origin:left;transition:transform .4s}
-.stat:hover::after{transform:scaleX(1)}
-.stat-val{font-family:var(--mono);font-size:26px;font-weight:700;line-height:1;margin-bottom:5px}
-.stat-lbl{font-size:12px;color:var(--muted);font-weight:500}
+/* ── FORM ── */
+.input-row{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:14px;}
+.input-group{flex:1;min-width:180px;}
+.input-label{font-size:12px;color:var(--muted);font-weight:500;margin-bottom:7px;display:block;}
+input[type=text],input[type=url],select{
+  width:100%;background:var(--surface);border:1px solid var(--border);
+  color:var(--text);font-family:var(--sans);font-size:14px;
+  padding:11px 14px;border-radius:8px;outline:none;transition:border-color .2s;
+}
+input:focus,select:focus{border-color:rgba(0,229,255,.4);}
+input::placeholder{color:var(--muted);}
+select option{background:var(--surface);}
+.btn{font-family:var(--sans);font-size:14px;font-weight:600;padding:10px 20px;border-radius:8px;border:none;cursor:pointer;transition:all .18s;white-space:nowrap;}
+.btn-primary{background:var(--accent);color:#000;}
+.btn-primary:hover{background:#33ebff;transform:translateY(-1px);box-shadow:0 4px 20px rgba(0,229,255,.25);}
+.btn-outline{background:none;color:var(--text);border:1px solid var(--border);}
+.btn-outline:hover{border-color:var(--accent);color:var(--accent);}
+.btn-ghost{background:none;color:var(--muted);border:1px solid transparent;font-size:12px;padding:6px 12px;}
+.btn-ghost:hover{color:var(--danger);}
+.btn-sm{padding:7px 14px;font-size:12px;}
+.btn-purple{background:rgba(124,58,237,.15);color:#a78bfa;border:1px solid rgba(124,58,237,.3);}
+.btn-purple:hover{background:rgba(124,58,237,.25);}
 
-/* LINK ITEMS */
-.link-item{display:flex;align-items:center;gap:12px;padding:13px 16px;border-radius:10px;background:var(--surface);border:1px solid var(--border);margin-bottom:9px;transition:border-color .2s}
-.link-item:hover{border-color:rgba(0,229,255,.25)}
-.link-icon{width:34px;height:34px;background:rgba(0,229,255,.1);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0}
-.link-info{flex:1;min-width:0}
-.link-name{font-size:14px;font-weight:500;margin-bottom:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.link-target{font-size:12px;color:var(--muted);font-family:var(--mono);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.link-meta{display:flex;flex-direction:column;align-items:flex-end;gap:6px;flex-shrink:0}
-.link-clicks{font-family:var(--mono);font-size:20px;font-weight:700;color:var(--accent)}
-.link-clicks small{display:block;font-size:10px;color:var(--muted);font-family:var(--sans);font-weight:400;text-transform:uppercase;letter-spacing:.5px;text-align:right}
+/* ── RESULT ── */
+.result-box{display:none;margin-top:16px;background:var(--surface);border:1px solid rgba(0,229,255,.2);border-radius:10px;padding:14px 16px;animation:slideUp .3s ease;}
+.result-box.show{display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
+@keyframes slideUp{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+.result-url{font-family:var(--mono);font-size:13px;color:var(--accent);flex:1;word-break:break-all;}
+.copy-btn{font-size:12px;font-family:var(--mono);padding:6px 12px;background:rgba(0,229,255,.08);border:1px solid rgba(0,229,255,.25);color:var(--accent);border-radius:6px;cursor:pointer;transition:all .2s;}
+.copy-btn:hover{background:rgba(0,229,255,.18);}
+.qr-wrap{text-align:center;margin-top:14px;display:none;}
+.qr-wrap img{border-radius:10px;border:2px solid var(--border);}
 
-/* TABLE */
-.table-wrap{overflow-x:auto;border-radius:10px;border:1px solid var(--border)}
-table{width:100%;border-collapse:collapse;font-size:13px}
-thead th{font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--muted);padding:11px 14px;text-align:left;background:var(--surface);border-bottom:1px solid var(--border);white-space:nowrap}
-tbody tr{border-bottom:1px solid rgba(30,30,46,.8);transition:background .15s}
-tbody tr:last-child{border-bottom:none}
-tbody tr:hover{background:rgba(0,229,255,.03)}
-tbody td{padding:10px 14px;vertical-align:middle}
-.td-ip{font-family:var(--mono);font-size:12px;color:var(--accent)}
-.badge{font-size:11px;font-weight:600;padding:3px 9px;border-radius:100px}
-.b-desktop{background:rgba(0,229,255,.1);color:var(--accent);border:1px solid rgba(0,229,255,.2)}
-.b-mobile{background:rgba(124,58,237,.12);color:#a78bfa;border:1px solid rgba(124,58,237,.25)}
-.b-tablet{background:rgba(255,214,0,.1);color:var(--warn);border:1px solid rgba(255,214,0,.2)}
-.muted{color:var(--muted);font-size:12px}
+/* ── LINK ROW ── */
+.link-row{display:flex;align-items:center;gap:12px;padding:13px 16px;border-radius:10px;background:var(--surface);border:1px solid var(--border);margin-bottom:10px;transition:border-color .2s;cursor:pointer;}
+.link-row:hover{border-color:rgba(0,229,255,.25);}
+.link-icon{width:34px;height:34px;background:rgba(0,229,255,.07);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;}
+.link-info{flex:1;min-width:0;}
+.link-name{font-size:14px;font-weight:500;margin-bottom:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.link-target{font-size:11px;color:var(--muted);font-family:var(--mono);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.link-clicks{font-family:var(--mono);font-size:20px;font-weight:700;color:var(--accent);text-align:right;flex-shrink:0;}
+.link-clicks small{display:block;font-size:10px;color:var(--muted);font-family:var(--sans);font-weight:400;text-transform:uppercase;}
 
-/* MODAL */
-.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.72);backdrop-filter:blur(6px);z-index:100;align-items:center;justify-content:center}
-.overlay.open{display:flex}
-.modal{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:30px;max-width:520px;width:92%;animation:mIn .25s ease;max-height:90vh;overflow-y:auto}
-@keyframes mIn{from{opacity:0;transform:scale(.95) translateY(8px)}to{opacity:1;transform:scale(1) translateY(0)}}
-.modal-title{font-size:18px;font-weight:600;margin-bottom:6px}
-.modal-sub{font-size:13px;color:var(--muted);margin-bottom:22px;line-height:1.5}
-.info-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.info-item{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:12px}
-.info-key{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;margin-bottom:4px;font-family:var(--mono)}
-.info-val{font-size:13px;font-weight:500}
-.modal-footer{display:flex;gap:8px;justify-content:flex-end;margin-top:22px}
+/* ── MAP ── */
+#map-container{height:480px;border-radius:12px;overflow:hidden;border:1px solid var(--border);position:relative;}
+.leaflet-container{background:#080810!important;}
+.map-popup{font-family:var(--sans);font-size:12px;color:#fff;background:var(--card);border:1px solid var(--border);border-radius:8px;padding:10px 12px;}
+.map-popup strong{color:var(--accent);font-family:var(--mono);font-size:13px;display:block;margin-bottom:4px;}
+.map-stat{font-size:11px;color:var(--muted);}
 
-/* QR modal */
-.qr-img{display:block;margin:16px auto;border-radius:10px;border:1px solid var(--border)}
+/* ── TABLE ── */
+.table-wrap{overflow-x:auto;border-radius:10px;border:1px solid var(--border);}
+table{width:100%;border-collapse:collapse;font-size:13px;}
+thead th{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--muted);padding:11px 14px;text-align:left;background:var(--surface);border-bottom:1px solid var(--border);white-space:nowrap;}
+tbody tr{border-bottom:1px solid rgba(28,28,46,.8);transition:background .15s;}
+tbody tr:last-child{border-bottom:none;}
+tbody tr:hover{background:rgba(0,229,255,.025);}
+tbody td{padding:10px 14px;vertical-align:middle;}
+.td-ip{font-family:var(--mono);font-size:12px;color:var(--accent);}
+.country-cell{display:flex;align-items:center;gap:7px;}
+.badge{font-size:11px;font-weight:600;padding:3px 8px;border-radius:100px;display:inline-block;}
+.badge-desktop{background:rgba(0,229,255,.07);color:var(--accent);border:1px solid rgba(0,229,255,.18);}
+.badge-mobile{background:rgba(124,58,237,.1);color:#a78bfa;border:1px solid rgba(124,58,237,.22);}
+.badge-tablet{background:rgba(255,214,0,.07);color:var(--warn);border:1px solid rgba(255,214,0,.2);}
+.badge-proxy{background:rgba(255,71,87,.1);color:var(--danger);border:1px solid rgba(255,71,87,.2);}
+.badge-vpn{background:rgba(255,214,0,.1);color:var(--warn);border:1px solid rgba(255,214,0,.2);}
+.muted{color:var(--muted);font-size:12px;}
 
-/* TOAST */
-.toast{position:fixed;bottom:28px;right:28px;background:var(--card);border:1px solid var(--border);border-radius:10px;padding:11px 16px;font-size:13px;z-index:999;display:none;align-items:center;gap:9px;animation:fadeUp .3s ease;max-width:280px}
-.toast.show{display:flex}
+/* ── MODAL ── */
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.8);backdrop-filter:blur(8px);z-index:200;align-items:center;justify-content:center;}
+.overlay.open{display:flex;}
+.modal{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:28px;max-width:600px;width:94%;animation:modalIn .25s ease;max-height:90vh;overflow-y:auto;}
+@keyframes modalIn{from{opacity:0;transform:scale(.95) translateY(10px)}to{opacity:1;transform:scale(1) translateY(0)}}
+.modal-title{font-size:17px;font-weight:600;margin-bottom:4px;}
+.modal-sub{font-size:13px;color:var(--muted);margin-bottom:20px;}
+.modal-footer{display:flex;gap:10px;justify-content:flex-end;margin-top:20px;}
 
-/* EMPTY */
-.empty{text-align:center;padding:54px 20px;color:var(--muted)}
-.empty-icon{font-size:38px;margin-bottom:10px}
-.empty p{font-size:14px}
+/* ── INFO GRID ── */
+.info-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;}
+@media(max-width:500px){.info-grid{grid-template-columns:1fr;}}
+.info-item{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:11px 13px;}
+.info-key{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;margin-bottom:4px;font-family:var(--mono);}
+.info-val{font-size:13px;font-weight:500;word-break:break-all;line-height:1.4;}
+.info-val.accent{color:var(--accent);}
+.info-val.warn{color:var(--warn);}
+.info-val.danger{color:var(--danger);}
+.info-val.success{color:var(--success);}
 
-/* VIEWS */
-.view{display:none}.view.active{display:block}
+/* ── SECTION ── */
+.section-divider{font-size:11px;font-family:var(--mono);color:var(--accent);text-transform:uppercase;letter-spacing:1.5px;margin:16px 0 10px;padding-bottom:6px;border-bottom:1px solid var(--border);}
 
-/* SECTION HEAD */
-.sec-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:10px}
-.sec-title{font-size:15px;font-weight:600}
+/* ── BAR ── */
+.bar-row{display:flex;align-items:center;gap:10px;margin-bottom:8px;}
+.bar-label{font-size:12px;color:var(--muted);width:100px;flex-shrink:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.bar-track{flex:1;height:5px;background:var(--border);border-radius:3px;overflow:hidden;}
+.bar-fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));border-radius:3px;transition:width .6s ease;}
+.bar-count{font-family:var(--mono);font-size:12px;width:32px;text-align:right;}
 
-@media(max-width:600px){header{padding:13px 16px}main{padding:32px 13px 60px}.hero h1{font-size:26px}.row{flex-direction:column}.info-grid{grid-template-columns:1fr}}
+/* ── EMPTY ── */
+.empty{text-align:center;padding:52px 20px;color:var(--muted);}
+.empty-icon{font-size:36px;margin-bottom:12px;}
+.empty p{font-size:14px;}
+
+/* ── TOAST ── */
+.toast{position:fixed;bottom:26px;right:26px;z-index:999;background:var(--card);border:1px solid var(--border);border-radius:10px;padding:11px 16px;font-size:13px;display:none;align-items:center;gap:9px;max-width:280px;animation:toastIn .3s ease;}
+.toast.show{display:flex;}
+@keyframes toastIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── ANALYTICS GRID ── */
+.analytics-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;}
+@media(max-width:700px){.analytics-grid{grid-template-columns:1fr;}}
+
+/* ── RISK BADGES ── */
+.risk-row{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px;}
 </style>
 </head>
 <body>
 
+<!-- ═══════════════════════════════════════════════════════ LOGIN PAGE -->
+<div id="login-page">
+  <div class="login-box">
+    <div class="login-logo" onclick="goInstagram()" title="Visit @a3_achu on Instagram">
+      <div class="a3-logo">A3</div>
+      <div class="login-title">TrackLink</div>
+      <div class="login-sub">by <span style="color:var(--accent)">@a3_achu</span> · tap logo to visit</div>
+    </div>
+    <div class="login-field">
+      <label>Username</label>
+      <input type="text" id="l-user" placeholder="Enter username" autocomplete="username">
+    </div>
+    <div class="login-field">
+      <label>Password</label>
+      <input type="password" id="l-pass" placeholder="Enter password" autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()">
+    </div>
+    <button class="login-btn" onclick="doLogin()">Sign In →</button>
+    <div class="login-err" id="l-err">Invalid username or password</div>
+    <div class="login-footer">
+      Visitor Intelligence Platform &nbsp;·&nbsp;
+      <a href="https://instagram.com/a3_achu" target="_blank">@a3_achu</a>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ MAIN APP -->
+<div id="app">
+
 <header>
-  <div class="logo"><div class="logo-dot"></div>TrackLink</div>
+  <div class="header-left">
+    <div class="a3-mini" onclick="goInstagram()" title="@a3_achu on Instagram">A3</div>
+    <div class="logo">
+      <div class="logo-dot"></div>
+      TrackLink
+    </div>
+  </div>
   <nav>
-    <button class="nav-btn active" onclick="show('dashboard')">Dashboard</button>
-    <button class="nav-btn"        onclick="show('create')">New Link</button>
-    <button class="nav-btn"        onclick="show('logs')">Visitor Logs</button>
+    <button class="nav-btn active" onclick="showView('dashboard')">Dashboard</button>
+    <button class="nav-btn" onclick="showView('create')">+ New Link</button>
+    <button class="nav-btn" onclick="showView('logs')">Visitor Logs</button>
+    <button class="nav-btn" onclick="showView('map')">🗺 Live Map</button>
+    <button class="nav-btn" onclick="showView('analytics')">Analytics</button>
   </nav>
+  <div class="header-right">
+    <div class="user-chip"><div class="user-dot"></div><span id="header-user">a3achu</span></div>
+    <button class="logout-btn" onclick="doLogout()">Logout</button>
+  </div>
 </header>
 
 <main>
 
-<!-- ── DASHBOARD ────────────────────────────── -->
+<!-- ── DASHBOARD ── -->
 <div class="view active" id="view-dashboard">
-  <div class="hero">
-    <div class="hero-badge"><span style="width:6px;height:6px;background:var(--success);border-radius:50%;display:inline-block"></span>Live Tracking Active</div>
-    <h1>Visitor <span>Intelligence</span><br>At a Glance</h1>
-    <p>Track who clicks your links — real IP, location, browser & device info logged instantly.</p>
+  <div style="margin-bottom:28px">
+    <h1 style="font-size:24px;font-weight:600;margin-bottom:6px">Welcome back, <span style="color:var(--accent)" id="dash-user">a3achu</span> 👋</h1>
+    <p style="font-size:14px;color:var(--muted)">Here's your visitor intelligence overview.</p>
   </div>
 
-  <div class="stats" id="stats">
-    <div class="stat"><div class="stat-val" id="s-total">—</div><div class="stat-lbl">Total Clicks</div></div>
-    <div class="stat"><div class="stat-val" id="s-unique">—</div><div class="stat-lbl">Unique IPs</div></div>
-    <div class="stat"><div class="stat-val" id="s-links">—</div><div class="stat-lbl">Active Links</div></div>
-    <div class="stat"><div class="stat-val" id="s-today">—</div><div class="stat-lbl">Today</div></div>
-  </div>
-
-  <div class="sec-head">
-    <span class="sec-title">Your Tracking Links</span>
-    <button class="btn btn-outline btn-sm" onclick="show('create')">+ New Link</button>
-  </div>
-  <div id="links-list"><div class="empty"><div class="empty-icon">🔗</div><p>No links yet.</p></div></div>
-</div>
-
-<!-- ── CREATE ────────────────────────────────── -->
-<div class="view" id="view-create">
-  <div style="margin-bottom:32px">
-    <h2 style="font-size:22px;font-weight:600;margin-bottom:6px">Create Tracking Link</h2>
-    <p style="color:var(--muted);font-size:14px">Wrap any URL. Share it. See every visitor in real time.</p>
+  <div class="stats-grid">
+    <div class="stat-card"><div class="stat-val" id="s-total">—</div><div class="stat-lbl">Total Clicks</div></div>
+    <div class="stat-card"><div class="stat-val" id="s-unique">—</div><div class="stat-lbl">Unique IPs</div></div>
+    <div class="stat-card"><div class="stat-val" id="s-links">—</div><div class="stat-lbl">Active Links</div></div>
+    <div class="stat-card">
+      <div class="stat-val" id="s-today">—</div>
+      <div class="stat-lbl">Today</div>
+      <div class="stat-sub" id="s-proxy">— proxies/VPN</div>
+    </div>
   </div>
 
   <div class="card">
-    <div class="card-label">Link Details</div>
-    <div class="row">
-      <div class="field" style="flex:2">
-        <label class="lbl">Target URL *</label>
-        <input type="url" id="f-target" placeholder="https://example.com/your-page">
-      </div>
+    <div class="card-head">
+      <span class="card-title">Your Tracking Links</span>
+      <button class="btn btn-outline btn-sm" onclick="showView('create')">+ Create New</button>
     </div>
-    <div class="row">
-      <div class="field">
-        <label class="lbl">Label (optional)</label>
-        <input type="text" id="f-label" placeholder="e.g. Campaign A">
-      </div>
-      <div class="field">
-        <label class="lbl">Custom Slug (optional)</label>
-        <input type="text" id="f-slug" placeholder="e.g. my-promo">
-      </div>
-    </div>
-    <div style="display:flex;gap:10px;margin-top:6px">
-      <button class="btn btn-primary" onclick="createLink()">Generate Link</button>
-      <button class="btn btn-outline" onclick="clearForm()">Clear</button>
-    </div>
+    <div id="links-list"><div class="empty"><div class="empty-icon">🔗</div><p>No links yet.</p></div></div>
+  </div>
+</div>
 
+<!-- ── CREATE ── -->
+<div class="view" id="view-create">
+  <div style="margin-bottom:30px">
+    <h2 style="font-size:22px;font-weight:600;margin-bottom:6px">Create Tracking Link</h2>
+    <p style="font-size:14px;color:var(--muted)">Wrap any URL. Every click logs the full visitor profile.</p>
+  </div>
+  <div class="card">
+    <div class="card-title" style="margin-bottom:18px">Link Details</div>
+    <div class="input-row">
+      <div class="input-group" style="flex:2">
+        <label class="input-label">Destination URL *</label>
+        <input type="url" id="f-target" placeholder="https://yourwebsite.com">
+      </div>
+    </div>
+    <div class="input-row">
+      <div class="input-group">
+        <label class="input-label">Label (optional)</label>
+        <input type="text" id="f-label" placeholder="e.g. Email Campaign">
+      </div>
+      <div class="input-group">
+        <label class="input-label">Custom Slug (optional)</label>
+        <input type="text" id="f-slug" placeholder="e.g. summer-sale">
+      </div>
+    </div>
+    <div style="display:flex;gap:10px;margin-top:4px">
+      <button class="btn btn-primary" onclick="createLink()">Generate Tracking Link</button>
+      <button class="btn btn-outline" onclick="clearCreate()">Clear</button>
+    </div>
     <div class="result-box" id="result-box">
       <div class="result-url" id="result-url"></div>
-      <button class="btn btn-outline btn-sm" onclick="copyLink()">Copy</button>
-      <button class="btn btn-outline btn-sm" onclick="showQR()">QR Code</button>
+      <button class="copy-btn" onclick="copyResult()">📋 Copy</button>
+      <button class="copy-btn btn-purple" onclick="loadQR()" style="border-color:rgba(124,58,237,.4);color:#a78bfa;background:rgba(124,58,237,.08)">QR Code</button>
     </div>
-  </div>
-
-  <div class="card">
-    <div class="card-label">How It Works</div>
-    <div class="info-grid">
-      <div class="info-item"><div class="info-key">Step 1</div><div class="info-val">Paste your target URL above</div></div>
-      <div class="info-item"><div class="info-key">Step 2</div><div class="info-val">Copy the generated tracking link</div></div>
-      <div class="info-item"><div class="info-key">Step 3</div><div class="info-val">Share it — anyone can click it</div></div>
-      <div class="info-item"><div class="info-key">Step 4</div><div class="info-val">IP, location &amp; device are logged</div></div>
+    <div class="qr-wrap" id="qr-wrap">
+      <img id="qr-img" src="" alt="QR" width="180">
+      <div style="font-size:12px;color:var(--muted);margin-top:8px">Scan to open tracking link</div>
     </div>
   </div>
 </div>
 
-<!-- ── LOGS ─────────────────────────────────── -->
+<!-- ── LOGS ── -->
 <div class="view" id="view-logs">
-  <div class="sec-head" style="margin-bottom:24px">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;flex-wrap:wrap;gap:12px">
     <div>
-      <div style="font-size:20px;font-weight:600;margin-bottom:4px">Visitor Logs</div>
-      <div style="font-size:14px;color:var(--muted)">Every click, captured.</div>
+      <h2 style="font-size:22px;font-weight:600;margin-bottom:4px">Visitor Logs</h2>
+      <p style="font-size:14px;color:var(--muted)">Every click, fully profiled.</p>
     </div>
-    <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
-      <select id="filter-link" onchange="loadLogs()" style="width:auto;font-size:13px;padding:8px 12px">
+    <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+      <select id="log-filter" onchange="loadLogs()" style="width:auto;font-size:13px;padding:8px 12px">
         <option value="">All Links</option>
       </select>
-      <button class="btn btn-danger btn-sm" onclick="clearLogs()">Clear All</button>
+      <button class="btn btn-outline btn-sm" onclick="loadLogs()">↻ Refresh</button>
     </div>
   </div>
   <div id="logs-container"><div class="empty"><div class="empty-icon">📭</div><p>No visits yet.</p></div></div>
 </div>
 
-</main>
-
-<!-- ── VISITOR DETAIL MODAL ─────────────────── -->
-<div class="overlay" id="visit-modal">
-  <div class="modal">
-    <div class="modal-title">Visitor Detail</div>
-    <div class="modal-sub" id="m-time"></div>
-    <div class="info-grid" id="m-grid"></div>
-    <div class="modal-footer"><button class="btn btn-outline btn-sm" onclick="closeModal('visit-modal')">Close</button></div>
+<!-- ── LIVE MAP ── -->
+<div class="view" id="view-map">
+  <div style="margin-bottom:22px">
+    <h2 style="font-size:22px;font-weight:600;margin-bottom:6px">🗺 Live Visitor Map</h2>
+    <p style="font-size:14px;color:var(--muted)">Real-time geographic distribution of your visitors.</p>
   </div>
-</div>
-
-<!-- ── QR MODAL ─────────────────────────────── -->
-<div class="overlay" id="qr-modal">
-  <div class="modal" style="text-align:center;max-width:340px">
-    <div class="modal-title">QR Code</div>
-    <div class="modal-sub" id="qr-sub"></div>
-    <img id="qr-img" class="qr-img" width="260" height="260" alt="QR">
-    <div class="modal-footer" style="justify-content:center">
-      <a id="qr-dl" class="btn btn-primary btn-sm" download="qrcode.png">Download</a>
-      <button class="btn btn-outline btn-sm" onclick="closeModal('qr-modal')">Close</button>
+  <div class="card" style="padding:0;overflow:hidden">
+    <div id="map-container"></div>
+  </div>
+  <div style="display:flex;gap:14px;margin-top:14px;flex-wrap:wrap">
+    <div class="card" style="flex:1;min-width:200px;padding:16px 20px">
+      <div class="card-title" style="margin-bottom:12px">Map Legend</div>
+      <div style="display:flex;flex-direction:column;gap:8px;font-size:13px">
+        <div style="display:flex;align-items:center;gap:8px"><span style="width:12px;height:12px;background:#00e5ff;border-radius:50%;display:inline-block"></span> Desktop visitor</div>
+        <div style="display:flex;align-items:center;gap:8px"><span style="width:12px;height:12px;background:#a78bfa;border-radius:50%;display:inline-block"></span> Mobile visitor</div>
+        <div style="display:flex;align-items:center;gap:8px"><span style="width:12px;height:12px;background:#ffd600;border-radius:50%;display:inline-block"></span> Tablet visitor</div>
+      </div>
+    </div>
+    <div class="card" style="flex:2;min-width:260px;padding:16px 20px">
+      <div class="card-title" style="margin-bottom:12px">Recent Locations</div>
+      <div id="map-recent-list"></div>
     </div>
   </div>
 </div>
 
-<!-- ── TOAST ────────────────────────────────── -->
-<div class="toast" id="toast"><span id="t-icon">✓</span><span id="t-msg"></span></div>
+<!-- ── ANALYTICS ── -->
+<div class="view" id="view-analytics">
+  <div style="margin-bottom:24px">
+    <h2 style="font-size:22px;font-weight:600;margin-bottom:4px">Analytics</h2>
+    <p style="font-size:14px;color:var(--muted)">Breakdowns by country, browser, device, and ISP.</p>
+  </div>
+  <div class="analytics-grid">
+    <div class="card"><div class="card-title" style="margin-bottom:14px">Top Countries</div><div id="a-countries"></div></div>
+    <div class="card"><div class="card-title" style="margin-bottom:14px">Top Browsers</div><div id="a-browsers"></div></div>
+    <div class="card"><div class="card-title" style="margin-bottom:14px">Device Types</div><div id="a-devices"></div></div>
+    <div class="card"><div class="card-title" style="margin-bottom:14px">Top ISPs</div><div id="a-isps"></div></div>
+  </div>
+</div>
+
+</main>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ VISITOR DETAIL MODAL -->
+<div class="overlay" id="modal-overlay">
+  <div class="modal">
+    <div class="modal-title">Full Visitor Profile</div>
+    <div class="modal-sub" id="modal-time"></div>
+    <div id="modal-content"></div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal()">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ TOAST -->
+<div class="toast" id="toast"><span id="t-icon"></span><span id="t-msg"></span></div>
 
 <script>
-// ── STATE ────────────────────────────────────
-let currentLinkId = null;
+// ─── STATE ───────────────────────────────────────────────────────────────────
+let authToken = localStorage.getItem('tl_token') || '';
+let currentVisits = [];
+let mapInstance = null;
+let mapMarkers = [];
 
-// ── VIEW SWITCHING ───────────────────────────
-function show(name) {
-  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-  document.getElementById('view-' + name).classList.add('active');
-  const idx = ['dashboard','create','logs'].indexOf(name);
-  document.querySelectorAll('.nav-btn')[idx].classList.add('active');
-  if (name === 'dashboard') loadDashboard();
-  if (name === 'logs') loadLogs();
+// ─── UTIL ────────────────────────────────────────────────────────────────────
+const esc = s => String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+function timeAgo(iso){
+  const d=Math.floor((Date.now()-new Date(iso).getTime())/1000);
+  if(d<60) return d+'s ago';
+  if(d<3600) return Math.floor(d/60)+'m ago';
+  if(d<86400) return Math.floor(d/3600)+'h ago';
+  return new Date(iso).toLocaleDateString();
+}
+function flag(code){
+  if(!code||code.length!==2||code==='LO'||code==='??') return '🌐';
+  return String.fromCodePoint(...[...code.toUpperCase()].map(c=>c.charCodeAt(0)+127397));
+}
+function deviceBadge(d){
+  const t=(d||'desktop').toLowerCase();
+  return `<span class="badge badge-${t}">${t.charAt(0).toUpperCase()+t.slice(1)}</span>`;
+}
+function toast(msg,icon='✓'){
+  document.getElementById('t-msg').textContent=msg;
+  document.getElementById('t-icon').textContent=icon;
+  const el=document.getElementById('toast');
+  el.classList.add('show');
+  setTimeout(()=>el.classList.remove('show'),3000);
 }
 
-// ── API HELPERS ──────────────────────────────
-async function api(method, path, body) {
-  const opts = { method, headers: { 'Content-Type': 'application/json' } };
-  if (body) opts.body = JSON.stringify(body);
-  const r = await fetch(path, opts);
-  return r.json();
+// ─── API ────────────────────────────────────────────────────────────────────
+async function api(method, path, body){
+  const opts = { method, headers:{'Content-Type':'application/json','x-auth-token':authToken} };
+  if(body) opts.body = JSON.stringify(body);
+  const res = await fetch(path, opts);
+  if(res.status===401){ showLogin(); return null; }
+  return res.json();
 }
 
-// ── DASHBOARD ────────────────────────────────
-async function loadDashboard() {
-  const [stats, links] = await Promise.all([api('GET','/api/stats'), api('GET','/api/links')]);
+// ─── INSTAGRAM ───────────────────────────────────────────────────────────────
+function goInstagram(){ window.open('https://instagram.com/a3_achu','_blank'); }
+
+// ─── AUTH ────────────────────────────────────────────────────────────────────
+async function doLogin(){
+  const username = document.getElementById('l-user').value.trim();
+  const password = document.getElementById('l-pass').value;
+  if(!username||!password){ showErr('Please enter username and password'); return; }
+  try{
+    const res = await fetch('/api/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username,password})});
+    const data = await res.json();
+    if(!res.ok){ showErr(data.error||'Login failed'); return; }
+    authToken = data.token;
+    localStorage.setItem('tl_token', authToken);
+    document.getElementById('header-user').textContent = data.username;
+    document.getElementById('dash-user').textContent = data.username;
+    showApp();
+  } catch(e){ showErr('Server error'); }
+}
+
+function showErr(msg){
+  const el=document.getElementById('l-err');
+  el.textContent=msg; el.style.display='block';
+  setTimeout(()=>el.style.display='none',3000);
+}
+
+async function doLogout(){
+  await api('POST','/api/logout');
+  authToken='';
+  localStorage.removeItem('tl_token');
+  showLogin();
+}
+
+function showLogin(){
+  document.getElementById('app').style.display='none';
+  document.getElementById('login-page').style.display='flex';
+}
+function showApp(){
+  document.getElementById('login-page').style.display='none';
+  document.getElementById('app').style.display='block';
+  showView('dashboard');
+}
+
+// ─── VIEWS ───────────────────────────────────────────────────────────────────
+function showView(name){
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('view-'+name).classList.add('active');
+  const idx=['dashboard','create','logs','map','analytics'].indexOf(name);
+  if(idx>=0) document.querySelectorAll('.nav-btn')[idx].classList.add('active');
+  if(name==='dashboard') loadDashboard();
+  if(name==='logs')      loadLogs();
+  if(name==='map')       loadMap();
+  if(name==='analytics') loadAnalytics();
+}
+
+// ─── DASHBOARD ───────────────────────────────────────────────────────────────
+async function loadDashboard(){
+  const [stats,links] = await Promise.all([api('GET','/api/stats'), api('GET','/api/links')]);
+  if(!stats||!links) return;
+
   document.getElementById('s-total').textContent  = stats.total_clicks;
   document.getElementById('s-unique').textContent = stats.unique_ips;
   document.getElementById('s-links').textContent  = stats.total_links;
-  document.getElementById('s-today').textContent  = stats.today;
+  document.getElementById('s-today').textContent  = stats.today_clicks;
+  document.getElementById('s-proxy').textContent  = stats.proxy_count + ' proxies/VPN detected';
 
-  const el = document.getElementById('links-list');
-  if (!links.length) { el.innerHTML = `<div class="empty"><div class="empty-icon">🔗</div><p>No links yet. Create one!</p></div>`; return; }
-
-  el.innerHTML = links.map(l => `
-    <div class="link-item">
+  const el=document.getElementById('links-list');
+  if(!links.length){
+    el.innerHTML=`<div class="empty"><div class="empty-icon">🔗</div><p>No links yet. <a href="#" onclick="showView('create');return false;" style="color:var(--accent)">Create your first!</a></p></div>`;
+    return;
+  }
+  el.innerHTML=links.map(l=>`
+    <div class="link-row" onclick="showView('logs');filterLogs('${l.id}')">
       <div class="link-icon">🔗</div>
       <div class="link-info">
         <div class="link-name">${esc(l.label)}</div>
         <div class="link-target">${esc(l.target)}</div>
-        <div class="link-target" style="color:var(--accent);margin-top:2px">${esc(l.trackingUrl)}</div>
       </div>
-      <div class="link-meta">
-        <div class="link-clicks">${l.clicks}<small>clicks</small></div>
-        <div style="display:flex;gap:5px">
-          <button class="btn btn-outline btn-sm" onclick="viewLogs('${l.id}')">Logs</button>
-          <button class="btn btn-outline btn-sm" onclick="openQR('${l.slug}','${esc(l.label)}')">QR</button>
-          <button class="btn btn-danger btn-sm" onclick="deleteLink('${l.id}')">✕</button>
-        </div>
-      </div>
+      <div class="link-clicks">${l.clicks||0}<small>clicks</small></div>
+      <button class="btn btn-ghost" onclick="event.stopPropagation();deleteLink('${l.id}')">🗑</button>
     </div>
   `).join('');
 }
 
-// ── CREATE LINK ──────────────────────────────
-async function createLink() {
-  const target = document.getElementById('f-target').value.trim();
-  const label  = document.getElementById('f-label').value.trim();
-  const slug   = document.getElementById('f-slug').value.trim();
-  if (!target) { toast('Enter a target URL', '⚠️'); return; }
+async function deleteLink(id){
+  if(!confirm('Delete this link and all its logs?')) return;
+  await api('DELETE','/api/links/'+id);
+  loadDashboard(); toast('Link deleted','🗑️');
+}
 
-  const data = await api('POST','/api/links',{ target, label, slug });
-  if (data.error) { toast(data.error, '⚠️'); return; }
-
-  currentLinkId = data.id;
-  document.getElementById('result-url').textContent = data.trackingUrl;
+// ─── CREATE ──────────────────────────────────────────────────────────────────
+async function createLink(){
+  const target=document.getElementById('f-target').value.trim();
+  const label=document.getElementById('f-label').value.trim();
+  const slug=document.getElementById('f-slug').value.trim();
+  if(!target){ toast('Please enter a destination URL','⚠️'); return; }
+  const data=await api('POST','/api/links',{target,label,slug});
+  if(!data) return;
+  if(data.error){ toast(data.error,'❌'); return; }
+  const trackUrl=`${location.origin}/t/${data.slug}`;
+  document.getElementById('result-url').textContent=trackUrl;
   document.getElementById('result-box').classList.add('show');
-  document.getElementById('qr-sub').textContent = data.trackingUrl;
-  toast('Tracking link created! 🎉', '🔗');
+  document.getElementById('qr-wrap').style.display='none';
+  toast('Tracking link created! 🎉','🔗');
 }
 
-function clearForm() {
-  ['f-target','f-label','f-slug'].forEach(id => document.getElementById(id).value='');
+function clearCreate(){
+  ['f-target','f-label','f-slug'].forEach(id=>document.getElementById(id).value='');
   document.getElementById('result-box').classList.remove('show');
-  currentLinkId = null;
+  document.getElementById('qr-wrap').style.display='none';
+}
+function copyResult(){
+  navigator.clipboard.writeText(document.getElementById('result-url').textContent)
+    .then(()=>toast('Copied!','✓'));
+}
+async function loadQR(){
+  const url=document.getElementById('result-url').textContent;
+  if(!url) return;
+  const data=await api('GET',`/api/qr?url=${encodeURIComponent(url)}`);
+  if(!data) return;
+  document.getElementById('qr-img').src=data.qr;
+  document.getElementById('qr-wrap').style.display='block';
 }
 
-function copyLink() {
-  const url = document.getElementById('result-url').textContent;
-  navigator.clipboard.writeText(url).then(() => toast('Copied!','✓'));
-}
+// ─── LOGS ────────────────────────────────────────────────────────────────────
+async function loadLogs(){
+  const links=await api('GET','/api/links');
+  if(!links) return;
+  const sel=document.getElementById('log-filter');
+  const cur=sel.value;
+  sel.innerHTML='<option value="">All Links</option>'+links.map(l=>`<option value="${l.id}">${esc(l.label)}</option>`).join('');
+  if(cur) sel.value=cur;
 
-// ── QR ───────────────────────────────────────
-function showQR() {
-  const url = document.getElementById('result-url').textContent;
-  const slug = url.split('/t/')[1];
-  if (!slug) return;
-  openQR(slug, url);
-}
+  const link_id=sel.value;
+  const url=link_id?`/api/visits?link_id=${link_id}`:'/api/visits';
+  currentVisits=await api('GET',url)||[];
 
-function openQR(slug, label) {
-  const src = `/api/qr/${slug}`;
-  document.getElementById('qr-img').src = src;
-  document.getElementById('qr-dl').href  = src;
-  document.getElementById('qr-sub').textContent = label;
-  document.getElementById('qr-modal').classList.add('open');
-}
-
-// ── LOGS ─────────────────────────────────────
-async function loadLogs(filterLinkId) {
-  // Populate filter dropdown
-  const links = await api('GET','/api/links');
-  const sel   = document.getElementById('filter-link');
-  const prev  = filterLinkId || sel.value;
-  sel.innerHTML = '<option value="">All Links</option>' +
-    links.map(l => `<option value="${l.id}">${esc(l.label)}</option>`).join('');
-  if (prev) sel.value = prev;
-
-  const url   = sel.value ? `/api/visits?link_id=${sel.value}` : '/api/visits';
-  const visits = await api('GET', url);
-  const el    = document.getElementById('logs-container');
-
-  if (!visits.length) {
-    el.innerHTML = `<div class="empty"><div class="empty-icon">📭</div><p>No visits yet. Share a tracking link to see data here.</p></div>`;
+  const el=document.getElementById('logs-container');
+  if(!currentVisits.length){
+    el.innerHTML=`<div class="empty"><div class="empty-icon">📭</div><p>No visits yet — share a tracking link!</p></div>`;
     return;
   }
 
-  el.innerHTML = `<div class="table-wrap"><table>
-    <thead><tr>
-      <th>IP Address</th><th>Location</th><th>ISP</th>
-      <th>Device</th><th>Browser</th><th>Referrer</th><th>Time</th><th></th>
-    </tr></thead>
-    <tbody>
-    ${visits.map(v => `
-      <tr>
-        <td class="td-ip">${v.ip}</td>
-        <td>
-          <span style="font-size:16px">${v.flag}</span>
-          <span style="margin-left:6px">${v.city ? v.city+', ' : ''}${v.country||'—'}</span>
-        </td>
-        <td class="muted">${v.isp||'—'}</td>
-        <td><span class="badge b-${(v.device_type||'desktop').toLowerCase()}">${v.device_type||'Desktop'}</span></td>
-        <td>${v.browser||'?'} ${v.browser_ver||''}<br><span class="muted">${v.os||'?'} ${v.os_ver||''}</span></td>
-        <td class="muted">${v.referrer||'Direct'}</td>
-        <td class="muted">${timeAgo(v.visited_at)}</td>
-        <td><button class="btn btn-outline btn-sm" onclick='showVisit(${JSON.stringify(v)})'>Detail</button></td>
-      </tr>
-    `).join('')}
-    </tbody></table></div>`;
+  el.innerHTML=`
+    <div class="table-wrap">
+      <table>
+        <thead><tr>
+          <th>IP Address</th><th>Location</th><th>ISP / Network</th>
+          <th>Device</th><th>Browser / OS</th><th>Referrer</th>
+          <th>Flags</th><th>Time</th><th></th>
+        </tr></thead>
+        <tbody>
+        ${currentVisits.map(v=>`
+          <tr>
+            <td class="td-ip">${esc(v.ip)}<br><span class="muted" style="font-size:10px">${esc(v.ip_type||'')}</span></td>
+            <td><div class="country-cell">
+              <span style="font-size:16px">${flag(v.country_code)}</span>
+              <div>
+                <div style="font-size:13px">${esc(v.city||'—')}</div>
+                <div class="muted">${esc(v.country||'—')}</div>
+              </div>
+            </div></td>
+            <td>
+              <div style="font-size:12px">${esc(v.isp||'—')}</div>
+              <div class="muted" style="font-size:11px">${esc(v.org||'')}</div>
+            </td>
+            <td>${deviceBadge(v.device)}<br><span class="muted" style="font-size:11px">${esc(v.device_brand||'')} ${esc(v.device_model||'')}</span></td>
+            <td>
+              <div style="font-size:13px">${esc(v.browser||'—')} ${esc(v.browser_ver||'')}</div>
+              <div class="muted">${esc(v.os||'—')} ${esc(v.os_ver||'')}</div>
+            </td>
+            <td class="muted" style="font-size:12px">${esc(v.referrer_domain||'Direct')}</td>
+            <td>
+              ${v.is_proxy?'<span class="badge badge-proxy">Proxy</span>':''}
+              ${v.is_vpn?'<span class="badge badge-vpn">VPN</span>':''}
+              ${v.is_mobile?'<span class="badge badge-mobile">Mobile ISP</span>':''}
+            </td>
+            <td class="muted">${timeAgo(v.time)}</td>
+            <td><button class="copy-btn" onclick="showDetail('${v.id}')">Detail</button></td>
+          </tr>
+        `).join('')}
+        </tbody>
+      </table>
+    </div>
+  `;
 }
 
-function viewLogs(linkId) {
-  show('logs');
-  setTimeout(() => loadLogs(linkId), 50);
+function filterLogs(id){
+  document.getElementById('log-filter').value=id;
+  loadLogs();
 }
 
-async function clearLogs() {
-  if (!confirm('Delete all visitor logs?')) return;
-  // Delete by clearing each link's visits via deleting and recreating — simpler: just reload
-  const links = await api('GET','/api/links');
-  // We'll add a dedicated clear endpoint — for now show message
-  toast('Use the server to clear the DB, or delete tracklink.db','ℹ️');
+// ─── VISITOR DETAIL MODAL ─────────────────────────────────────────────────────
+function showDetail(id){
+  const v=currentVisits.find(x=>x.id===id);
+  if(!v) return;
+  document.getElementById('modal-time').textContent='Visited '+new Date(v.time).toLocaleString();
+
+  const sections = [
+    { title: '🌐 Network & IP', items: [
+      ['IP Address', v.ip, 'accent'],
+      ['IP Type', v.ip_type||'—', v.ip_type==='hosting'?'warn':''],
+      ['Proxy/VPN', v.is_proxy?'⚠️ Yes':'✅ No', v.is_proxy?'danger':'success'],
+      ['Mobile ISP', v.is_mobile?'Yes':'No', ''],
+      ['AS Number', v.as_number||'—', ''],
+      ['ISP', v.isp||'—', ''],
+      ['Organization', v.org||'—', ''],
+    ]},
+    { title: '📍 Location', items: [
+      ['Country', (flag(v.country_code)||'')+ ' ' + (v.country||'—'), ''],
+      ['City', v.city||'—', ''],
+      ['Region', v.region||'—', ''],
+      ['ZIP / Postal', v.zip||'—', ''],
+      ['Coordinates', v.lat&&v.lon?`${v.lat.toFixed(4)}, ${v.lon.toFixed(4)}`:'—', 'accent'],
+      ['Timezone (Server)', v.timezone||'—', ''],
+      ['Timezone (Browser)', v.timezone_client||'—', ''],
+    ]},
+    { title: '💻 Device & Browser', items: [
+      ['Device Type', v.device||'Desktop', ''],
+      ['Brand / Model', (v.device_brand||'—')+' '+(v.device_model||''), ''],
+      ['Browser', (v.browser||'—')+' '+(v.browser_ver||''), ''],
+      ['Browser Engine', v.browser_engine||'—', ''],
+      ['Operating System', (v.os||'—')+' '+(v.os_ver||''), ''],
+      ['CPU Architecture', v.cpu_arch||'—', ''],
+      ['Platform', v.platform||'—', ''],
+    ]},
+    { title: '🖥 Screen & Language', items: [
+      ['Screen Resolution', v.screen||'—', ''],
+      ['Color Depth', v.color_depth?v.color_depth+' bit':'—', ''],
+      ['Language', v.language||'—', ''],
+    ]},
+    { title: '🔗 Visit Info', items: [
+      ['Referrer', v.referrer||'Direct', ''],
+      ['Referrer Domain', v.referrer_domain||'Direct', ''],
+      ['Tracking Link', v.link_label||'—', ''],
+      ['Link Slug', '/t/'+(v.link_slug||'—'), 'accent'],
+      ['Visit Time', new Date(v.time).toLocaleString(), ''],
+    ]},
+    { title: '🤖 Raw User Agent', items: [
+      ['User Agent', v.ua||'—', ''],
+    ]},
+  ];
+
+  document.getElementById('modal-content').innerHTML = sections.map(s=>`
+    <div class="section-divider">${s.title}</div>
+    <div class="info-grid">
+      ${s.items.map(([k,val,cls])=>`
+        <div class="info-item">
+          <div class="info-key">${k}</div>
+          <div class="info-val ${cls||''}">${esc(val)}</div>
+        </div>
+      `).join('')}
+    </div>
+  `).join('');
+
+  // Map mini-preview link
+  if(v.lat && v.lon && v.lat!==0){
+    document.getElementById('modal-content').innerHTML += `
+      <div style="margin-top:12px;text-align:center">
+        <a href="https://www.google.com/maps?q=${v.lat},${v.lon}" target="_blank"
+           style="display:inline-flex;align-items:center;gap:7px;font-size:13px;color:var(--accent);text-decoration:none;border:1px solid rgba(0,229,255,.2);padding:8px 16px;border-radius:8px;background:rgba(0,229,255,.05)">
+          📍 Open in Google Maps (${v.lat.toFixed(4)}, ${v.lon.toFixed(4)})
+        </a>
+      </div>`;
+  }
+
+  document.getElementById('modal-overlay').classList.add('open');
 }
 
-// ── VISITOR DETAIL ───────────────────────────
-function showVisit(v) {
-  document.getElementById('m-time').textContent = 'Visited at ' + new Date(v.visited_at).toLocaleString();
-  document.getElementById('m-grid').innerHTML = [
-    ['IP',       v.ip],
-    ['Country',  (v.flag||'')+'  '+(v.country||'—')],
-    ['Region',   v.region||'—'],
-    ['City',     v.city||'—'],
-    ['ISP',      v.isp||'—'],
-    ['Device',   v.device_type||'—'],
-    ['Browser',  (v.browser||'?')+' '+(v.browser_ver||'')],
-    ['OS',       (v.os||'?')+' '+(v.os_ver||'')],
-    ['Referrer', v.referrer||'Direct'],
-    ['Lat/Lon',  v.lat&&v.lon ? `${v.lat}, ${v.lon}` : '—'],
-  ].map(([k,val]) => `
-    <div class="info-item">
-      <div class="info-key">${k}</div>
-      <div class="info-val">${esc(String(val))}</div>
-    </div>`).join('');
-  document.getElementById('visit-modal').classList.add('open');
+function closeModal(){ document.getElementById('modal-overlay').classList.remove('open'); }
+
+// ─── LIVE MAP ────────────────────────────────────────────────────────────────
+async function loadMap(){
+  const stats=await api('GET','/api/stats');
+  if(!stats) return;
+
+  // Init map
+  if(!mapInstance){
+    mapInstance=L.map('map-container',{
+      center:[20,0], zoom:2,
+      zoomControl:true,
+      attributionControl:false
+    });
+
+    // Dark tile layer
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{
+      maxZoom:19, subdomains:'abcd'
+    }).addTo(mapInstance);
+  }
+
+  // Clear old markers
+  mapMarkers.forEach(m=>m.remove());
+  mapMarkers=[];
+
+  const points = stats.map_points||[];
+
+  points.forEach(p=>{
+    if(!p.lat||!p.lon) return;
+    const color = p.device==='mobile'?'#a78bfa': p.device==='tablet'?'#ffd600':'#00e5ff';
+    const marker = L.circleMarker([p.lat,p.lon],{
+      radius:7, fillColor:color, color:'rgba(255,255,255,.3)',
+      weight:1.5, opacity:1, fillOpacity:0.85
+    }).addTo(mapInstance);
+
+    marker.bindPopup(`
+      <div class="map-popup">
+        <strong>${flag(p.country_code)} ${esc(p.city||'Unknown')}, ${esc(p.country||'')}</strong>
+        <div class="map-stat">IP: ${esc(p.ip)}</div>
+        <div class="map-stat">Device: ${esc(p.device||'desktop')}</div>
+        <div class="map-stat">Browser: ${esc(p.browser||'—')}</div>
+        <div class="map-stat">${timeAgo(p.time)}</div>
+      </div>
+    `, { className:'leaflet-popup-custom', maxWidth:200 });
+
+    mapMarkers.push(marker);
+  });
+
+  // Recent locations list
+  const recentEl=document.getElementById('map-recent-list');
+  const recent=points.slice(0,8);
+  if(!recent.length){
+    recentEl.innerHTML='<p style="color:var(--muted);font-size:13px">No location data yet.</p>';
+  } else {
+    recentEl.innerHTML=recent.map(p=>`
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;font-size:13px">
+        <span style="font-size:16px">${flag(p.country_code)}</span>
+        <div style="flex:1">
+          <div style="font-weight:500">${esc(p.city||'Unknown')}, ${esc(p.country||'—')}</div>
+          <div class="muted" style="font-size:11px">${esc(p.ip)} · ${timeAgo(p.time)}</div>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  toast(`${points.length} visitor locations loaded`,'🗺️');
 }
 
-// ── DELETE LINK ──────────────────────────────
-async function deleteLink(id) {
-  if (!confirm('Delete this link and all its visit logs?')) return;
-  await api('DELETE', `/api/links/${id}`);
-  toast('Link deleted','🗑️');
-  loadDashboard();
+// ─── ANALYTICS ───────────────────────────────────────────────────────────────
+async function loadAnalytics(){
+  const s=await api('GET','/api/stats');
+  if(!s) return;
+
+  const renderBars=(items,el,labelKey)=>{
+    const max=items[0]?.count||1;
+    document.getElementById(el).innerHTML=!items.length
+      ?'<p style="color:var(--muted);font-size:13px">No data yet.</p>'
+      :items.map(i=>`
+        <div class="bar-row">
+          <div class="bar-label" title="${esc(i[labelKey])}">${flag(i.country_code)||''} ${esc(i[labelKey]||'?')}</div>
+          <div class="bar-track"><div class="bar-fill" style="width:${Math.round(i.count/max*100)}%"></div></div>
+          <div class="bar-count">${i.count}</div>
+        </div>`).join('');
+  };
+
+  renderBars(s.top_countries,'a-countries','country');
+  renderBars(s.top_browsers, 'a-browsers', 'browser');
+  renderBars(s.devices,      'a-devices',  'device');
+  renderBars(s.top_isps,     'a-isps',     'isp');
 }
 
-// ── MODALS ───────────────────────────────────
-function closeModal(id) { document.getElementById(id).classList.remove('open'); }
-window.addEventListener('click', e => {
-  if (e.target.classList.contains('overlay')) e.target.classList.remove('open');
-});
+// ─── AUTO-REFRESH ─────────────────────────────────────────────────────────────
+setInterval(()=>{
+  if(document.getElementById('view-logs').classList.contains('active')) loadLogs();
+  if(document.getElementById('view-map').classList.contains('active'))  loadMap();
+}, 15000);
 
-// ── HELPERS ──────────────────────────────────
-function esc(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
-
-function timeAgo(iso) {
-  const s = Math.floor((Date.now() - new Date(iso))/1000);
-  if (s<60)    return s+'s ago';
-  if (s<3600)  return Math.floor(s/60)+'m ago';
-  if (s<86400) return Math.floor(s/3600)+'h ago';
-  return Math.floor(s/86400)+'d ago';
-}
-
-function toast(msg, icon='✓') {
-  document.getElementById('t-msg').textContent  = msg;
-  document.getElementById('t-icon').textContent = icon;
-  const t = document.getElementById('toast');
-  t.classList.add('show');
-  setTimeout(()=>t.classList.remove('show'), 3200);
-}
-
-// ── INIT ─────────────────────────────────────
-loadDashboard();
+// ─── INIT ────────────────────────────────────────────────────────────────────
+(async function init(){
+  if(authToken){
+    const me=await fetch('/api/me',{headers:{'x-auth-token':authToken}});
+    if(me.ok){
+      const data=await me.json();
+      document.getElementById('header-user').textContent=data.username;
+      document.getElementById('dash-user').textContent=data.username;
+      showApp();
+    } else {
+      authToken=''; localStorage.removeItem('tl_token');
+    }
+  }
+})();
 </script>
 </body>
 </html>
