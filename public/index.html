@@ -22,7 +22,7 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
   background-image:linear-gradient(rgba(0,229,255,.022) 1px,transparent 1px),linear-gradient(90deg,rgba(0,229,255,.022) 1px,transparent 1px);
   background-size:44px 44px;}
 
-/* ══ AUTH ══════════════════════════════════════════════════════════════ */
+/* ── AUTH ── */
 #auth-page{display:flex;align-items:center;justify-content:center;min-height:100vh;position:relative;z-index:10;padding:16px;}
 .auth-box{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:32px 28px;width:100%;max-width:400px;}
 .auth-logo{text-align:center;margin-bottom:24px;}
@@ -38,94 +38,79 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
 .field input{width:100%;background:var(--surface);border:1px solid var(--border);color:var(--text);font-family:var(--sans);font-size:15px;padding:12px 14px;border-radius:9px;outline:none;transition:border-color .2s;}
 .field input:focus{border-color:rgba(0,229,255,.4);}
 .field input::placeholder{color:var(--muted);}
-.auth-btn{width:100%;padding:13px;background:linear-gradient(135deg,var(--accent2),var(--accent));color:#fff;font-family:var(--sans);font-size:15px;font-weight:600;border:none;border-radius:10px;cursor:pointer;transition:all .2s;}
-.auth-btn:active{transform:scale(.98);}
+.auth-btn{width:100%;padding:13px;background:linear-gradient(135deg,var(--accent2),var(--accent));color:#fff;font-family:var(--sans);font-size:15px;font-weight:600;border:none;border-radius:10px;cursor:pointer;}
 .auth-err{color:var(--danger);font-size:12px;text-align:center;margin-top:9px;display:none;padding:8px;background:rgba(255,71,87,.07);border-radius:8px;border:1px solid rgba(255,71,87,.18);}
 
-/* ══ DESKTOP HEADER ════════════════════════════════════════════════════ */
+/* ── HEADER ── */
 #app{display:none;}
-.desktop-header{
-  position:sticky;top:0;z-index:100;
-  display:flex;align-items:center;justify-content:space-between;
-  padding:0 24px;height:var(--header-h);
-  border-bottom:1px solid var(--border);
-  background:rgba(8,8,16,.94);backdrop-filter:blur(16px);
-}
+.desktop-header{position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 24px;height:var(--header-h);border-bottom:1px solid var(--border);background:rgba(8,8,16,.94);backdrop-filter:blur(16px);}
 .logo{font-family:var(--mono);font-size:15px;color:var(--accent);display:flex;align-items:center;gap:8px;}
 .logo-dot{width:7px;height:7px;background:var(--success);border-radius:50%;animation:blink 2s infinite;}
 @keyframes blink{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.3;transform:scale(1.5)}}
 .desktop-nav{display:flex;gap:2px;}
-.nav-btn{font-size:13px;font-weight:500;padding:6px 14px;border-radius:7px;border:1px solid transparent;color:var(--muted);background:none;cursor:pointer;transition:all .2s;white-space:nowrap;}
+.nav-btn{font-size:13px;font-weight:500;padding:6px 13px;border-radius:7px;border:1px solid transparent;color:var(--muted);background:none;cursor:pointer;transition:all .2s;white-space:nowrap;}
 .nav-btn:hover{color:var(--text);border-color:var(--border);background:var(--card);}
 .nav-btn.active{color:var(--accent);border-color:rgba(0,229,255,.22);background:rgba(0,229,255,.05);}
 .header-right{display:flex;align-items:center;gap:8px;}
 .user-chip{font-size:12px;color:var(--muted);background:var(--surface);border:1px solid var(--border);padding:5px 12px;border-radius:20px;display:flex;align-items:center;gap:6px;}
 .user-dot{width:6px;height:6px;background:var(--success);border-radius:50%;}
-.logout-btn{font-size:12px;padding:5px 11px;border-radius:7px;border:1px solid var(--border);background:none;color:var(--muted);cursor:pointer;transition:all .2s;}
-.logout-btn:hover{color:var(--danger);border-color:rgba(255,71,87,.3);}
+.logout-btn{font-size:12px;padding:5px 11px;border-radius:7px;border:1px solid var(--border);background:none;color:var(--muted);cursor:pointer;}
+.logout-btn:hover{color:var(--danger);}
 
-/* ══ MOBILE BOTTOM NAV ════════════════════════════════════════════════ */
-.mobile-nav{
-  display:none;position:fixed;bottom:0;left:0;right:0;z-index:200;
-  background:rgba(13,13,25,.97);backdrop-filter:blur(16px);
-  border-top:1px solid var(--border);
-  height:var(--bottom-h);padding:0 4px;
-  display:none;align-items:center;justify-content:space-around;
-}
-.mob-btn{display:flex;flex-direction:column;align-items:center;gap:3px;padding:8px 12px;border:none;background:none;color:var(--muted);cursor:pointer;border-radius:10px;transition:all .2s;flex:1;}
+/* ── MOBILE NAV ── */
+.mobile-nav{display:none;position:fixed;bottom:0;left:0;right:0;z-index:200;background:rgba(13,13,25,.97);backdrop-filter:blur(16px);border-top:1px solid var(--border);height:var(--bottom-h);padding:0 4px;align-items:center;justify-content:space-around;}
+.mob-btn{display:flex;flex-direction:column;align-items:center;gap:3px;padding:8px 10px;border:none;background:none;color:var(--muted);cursor:pointer;border-radius:10px;flex:1;}
 .mob-btn.active{color:var(--accent);}
-.mob-btn .icon{font-size:20px;line-height:1;}
+.mob-btn .icon{font-size:19px;line-height:1;}
 .mob-btn .label{font-size:10px;font-weight:500;}
-.mob-menu-btn{display:none;background:none;border:none;color:var(--text);padding:8px;cursor:pointer;}
 
-/* ══ MAIN ══════════════════════════════════════════════════════════════ */
-main{position:relative;z-index:5;max-width:1200px;margin:0 auto;padding:28px 20px 80px;}
-.view{display:none;} .view.active{display:block;}
+/* ── MAIN ── */
+main{position:relative;z-index:5;max-width:1240px;margin:0 auto;padding:26px 20px 80px;}
+.view{display:none;}.view.active{display:block;}
 
-/* ══ STATS ═════════════════════════════════════════════════════════════ */
-.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:22px;}
-.stat-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px;position:relative;overflow:hidden;transition:border-color .2s;}
-.stat-card:hover{border-color:rgba(0,229,255,.2);}
+/* ── STATS ── */
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px;}
+.stat-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:15px;position:relative;overflow:hidden;}
 .stat-card::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--accent),var(--accent2));transform:scaleX(0);transform-origin:left;transition:transform .4s;}
 .stat-card:hover::after{transform:scaleX(1);}
-.stat-val{font-family:var(--mono);font-size:26px;font-weight:700;line-height:1;margin-bottom:5px;}
+.stat-val{font-family:var(--mono);font-size:25px;font-weight:700;line-height:1;margin-bottom:4px;}
 .stat-lbl{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.7px;}
-.stat-sub{font-size:11px;color:var(--success);margin-top:3px;}
+.stat-sub{font-size:10px;color:var(--success);margin-top:3px;}
 
-/* ══ CARD ══════════════════════════════════════════════════════════════ */
+/* ── CARD ── */
 .card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:18px 20px;margin-bottom:14px;}
 .card-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:8px;}
 .card-title{font-size:11px;font-family:var(--mono);color:var(--muted);text-transform:uppercase;letter-spacing:1.4px;display:flex;align-items:center;gap:7px;}
 .card-title::before{content:'';width:3px;height:12px;background:var(--accent);border-radius:2px;}
 
-/* ══ FORM ══════════════════════════════════════════════════════════════ */
+/* ── FORM ── */
 .input-row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px;}
 .input-group{flex:1;min-width:150px;}
 .input-label{font-size:12px;color:var(--muted);font-weight:500;margin-bottom:6px;display:block;}
-input[type=text],input[type=url],select{width:100%;background:var(--surface);border:1px solid var(--border);color:var(--text);font-family:var(--sans);font-size:14px;padding:10px 13px;border-radius:8px;outline:none;transition:border-color .2s;}
+input[type=text],input[type=url],input[type=email],select{width:100%;background:var(--surface);border:1px solid var(--border);color:var(--text);font-family:var(--sans);font-size:14px;padding:10px 13px;border-radius:8px;outline:none;transition:border-color .2s;}
 input:focus,select:focus{border-color:rgba(0,229,255,.4);}
 input::placeholder{color:var(--muted);}
 select option{background:var(--surface);}
-.btn{font-family:var(--sans);font-size:13px;font-weight:600;padding:9px 17px;border-radius:8px;border:none;cursor:pointer;transition:all .18s;white-space:nowrap;}
+.btn{font-family:var(--sans);font-size:13px;font-weight:600;padding:9px 16px;border-radius:8px;border:none;cursor:pointer;transition:all .18s;white-space:nowrap;}
 .btn-primary{background:var(--accent);color:#000;}
-.btn-primary:active{transform:scale(.97);}
 .btn-outline{background:none;color:var(--text);border:1px solid var(--border);}
 .btn-outline:hover{border-color:var(--accent);color:var(--accent);}
-.btn-danger{background:rgba(255,71,87,.1);color:var(--danger);border:1px solid rgba(255,71,87,.25);}
-.btn-danger:hover{background:rgba(255,71,87,.2);}
-.btn-ghost{background:none;color:var(--muted);border:none;font-size:12px;padding:5px 9px;cursor:pointer;}
+.btn-danger{background:rgba(255,71,87,.1);color:var(--danger);border:1px solid rgba(255,71,87,.22);}
+.btn-success{background:rgba(0,230,118,.1);color:var(--success);border:1px solid rgba(0,230,118,.22);}
+.btn-ghost{background:none;color:var(--muted);border:none;font-size:12px;padding:5px 8px;cursor:pointer;}
 .btn-ghost:hover{color:var(--danger);}
-.btn-sm{padding:6px 12px;font-size:12px;}
+.btn-sm{padding:6px 11px;font-size:12px;}
+.btn-xs{padding:4px 8px;font-size:11px;}
 
-/* ══ RESULT ════════════════════════════════════════════════════════════ */
-.result-box{display:none;margin-top:13px;background:var(--surface);border:1px solid rgba(0,229,255,.2);border-radius:10px;padding:11px 14px;}
-.result-box.show{display:flex;align-items:center;gap:9px;flex-wrap:wrap;}
+/* ── RESULT ── */
+.result-box{display:none;margin-top:12px;background:var(--surface);border:1px solid rgba(0,229,255,.2);border-radius:10px;padding:11px 14px;}
+.result-box.show{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
 .result-url{font-family:var(--mono);font-size:12px;color:var(--accent);flex:1;word-break:break-all;}
 .copy-btn{font-size:11px;font-family:var(--mono);padding:5px 10px;background:rgba(0,229,255,.07);border:1px solid rgba(0,229,255,.2);color:var(--accent);border-radius:6px;cursor:pointer;}
 .qr-wrap{text-align:center;margin-top:11px;display:none;}
 
-/* ══ LINK ROW ══════════════════════════════════════════════════════════ */
-.link-row{display:flex;align-items:center;gap:10px;padding:11px 14px;border-radius:10px;background:var(--surface);border:1px solid var(--border);margin-bottom:8px;transition:border-color .2s;cursor:pointer;}
+/* ── LINK ROW ── */
+.link-row{display:flex;align-items:center;gap:10px;padding:11px 14px;border-radius:10px;background:var(--surface);border:1px solid var(--border);margin-bottom:8px;cursor:pointer;transition:border-color .2s;}
 .link-row:hover{border-color:rgba(0,229,255,.2);}
 .link-icon{width:32px;height:32px;background:rgba(0,229,255,.07);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;}
 .link-info{flex:1;min-width:0;}
@@ -134,32 +119,39 @@ select option{background:var(--surface);}
 .link-clicks{font-family:var(--mono);font-size:18px;font-weight:700;color:var(--accent);text-align:right;flex-shrink:0;}
 .link-clicks small{display:block;font-size:9px;color:var(--muted);font-family:var(--sans);text-transform:uppercase;}
 
-/* ══ MAP PAGE LAYOUT ═══════════════════════════════════════════════════ */
-.map-layout{display:grid;grid-template-columns:300px 1fr;gap:14px;align-items:start;}
-#map-container{height:520px;border-radius:12px;overflow:hidden;border:1px solid var(--border);}
+/* ── MAP LAYOUT ── */
+.map-layout{display:grid;grid-template-columns:280px 1fr;gap:14px;}
+#map-container{height:560px;border-radius:12px;overflow:hidden;border:1px solid var(--border);}
 .leaflet-container{background:#080810!important;}
-.visitor-sidebar{background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:hidden;max-height:520px;display:flex;flex-direction:column;}
-.sidebar-head{padding:14px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
-.sidebar-title{font-size:11px;font-family:var(--mono);color:var(--muted);text-transform:uppercase;letter-spacing:1.2px;}
+.visitor-sidebar{background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:hidden;height:560px;display:flex;flex-direction:column;}
+.sidebar-head{padding:12px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
+.sidebar-title{font-size:11px;font-family:var(--mono);color:var(--muted);text-transform:uppercase;letter-spacing:1px;}
 .visitor-list{overflow-y:auto;flex:1;}
-.visitor-item{padding:11px 14px;border-bottom:1px solid rgba(28,28,46,.8);cursor:pointer;transition:background .15s;display:flex;align-items:center;gap:10px;}
+.visitor-item{padding:10px 13px;border-bottom:1px solid rgba(28,28,46,.7);cursor:pointer;transition:background .15s;display:flex;align-items:flex-start;gap:9px;position:relative;}
 .visitor-item:hover{background:rgba(0,229,255,.04);}
 .visitor-item.selected{background:rgba(0,229,255,.07);border-left:2px solid var(--accent);}
-.visitor-item:last-child{border-bottom:none;}
-.vi-flag{font-size:16px;flex-shrink:0;}
+.visitor-item.live-active{background:rgba(0,230,118,.04);border-left:2px solid var(--success);}
+.vi-flag{font-size:15px;flex-shrink:0;margin-top:1px;}
 .vi-info{flex:1;min-width:0;}
 .vi-ip{font-family:var(--mono);font-size:11px;color:var(--accent);}
 .vi-loc{font-size:11px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .vi-time{font-size:10px;color:var(--muted);}
 .vi-gps{font-size:10px;color:var(--success);}
-.vi-del{background:none;border:none;color:var(--muted);cursor:pointer;padding:4px;border-radius:4px;flex-shrink:0;font-size:14px;}
+.vi-live{font-size:10px;color:var(--success);display:flex;align-items:center;gap:4px;}
+.vi-live::before{content:'';width:5px;height:5px;background:var(--success);border-radius:50%;animation:blink 1.2s infinite;}
+.vi-actions{display:flex;flex-direction:column;gap:3px;flex-shrink:0;}
+.vi-del{background:none;border:none;color:var(--muted);cursor:pointer;padding:3px;border-radius:4px;font-size:13px;line-height:1;}
 .vi-del:hover{color:var(--danger);}
+.vi-track{background:rgba(0,230,118,.1);border:1px solid rgba(0,230,118,.2);color:var(--success);cursor:pointer;padding:2px 6px;border-radius:4px;font-size:10px;font-weight:600;}
+.vi-track:hover{background:rgba(0,230,118,.2);}
+.vi-track.tracking{background:rgba(0,230,118,.2);animation:pulse 1.5s infinite;}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
 
-/* ══ LOGS ══════════════════════════════════════════════════════════════ */
+/* ── TABLE ── */
 .table-wrap{overflow-x:auto;border-radius:10px;border:1px solid var(--border);}
 table{width:100%;border-collapse:collapse;font-size:12px;}
-thead th{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:.9px;color:var(--muted);padding:10px 12px;text-align:left;background:var(--surface);border-bottom:1px solid var(--border);white-space:nowrap;}
-tbody tr{border-bottom:1px solid rgba(28,28,46,.8);transition:background .15s;}
+thead th{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:.9px;color:var(--muted);padding:9px 12px;text-align:left;background:var(--surface);border-bottom:1px solid var(--border);white-space:nowrap;}
+tbody tr{border-bottom:1px solid rgba(28,28,46,.7);transition:background .15s;}
 tbody tr:hover{background:rgba(0,229,255,.02);}
 tbody tr:last-child{border-bottom:none;}
 tbody td{padding:8px 12px;vertical-align:middle;}
@@ -170,27 +162,40 @@ tbody td{padding:8px 12px;vertical-align:middle;}
 .badge-tablet{background:rgba(255,214,0,.07);color:var(--warn);border:1px solid rgba(255,214,0,.18);}
 .badge-proxy{background:rgba(255,71,87,.09);color:var(--danger);border:1px solid rgba(255,71,87,.2);}
 .badge-gps{background:rgba(0,230,118,.09);color:var(--success);border:1px solid rgba(0,230,118,.2);}
+.badge-live{background:rgba(0,230,118,.15);color:var(--success);border:1px solid rgba(0,230,118,.3);animation:pulse 1.5s infinite;}
 .muted{color:var(--muted);font-size:11px;}
 
-/* ══ MODAL ═════════════════════════════════════════════════════════════ */
+/* ── MODAL ── */
 .overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.82);backdrop-filter:blur(8px);z-index:300;align-items:center;justify-content:center;padding:14px;}
 .overlay.open{display:flex;}
-.modal{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:24px;max-width:600px;width:100%;animation:modalIn .25s ease;max-height:92vh;overflow-y:auto;}
+.modal{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:24px;max-width:640px;width:100%;animation:modalIn .22s ease;max-height:92vh;overflow-y:auto;}
 @keyframes modalIn{from{opacity:0;transform:scale(.95) translateY(8px)}to{opacity:1;transform:scale(1) translateY(0)}}
 .modal-title{font-size:16px;font-weight:600;margin-bottom:3px;}
-.modal-sub{font-size:12px;color:var(--muted);margin-bottom:16px;}
+.modal-sub{font-size:12px;color:var(--muted);margin-bottom:14px;}
 .modal-footer{display:flex;gap:9px;justify-content:flex-end;margin-top:16px;}
 .info-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px;}
 .info-item{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:9px 11px;}
 .info-key{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.7px;margin-bottom:3px;font-family:var(--mono);}
 .info-val{font-size:12px;font-weight:500;word-break:break-all;line-height:1.4;}
-.info-val.accent{color:var(--accent);} .info-val.success{color:var(--success);} .info-val.danger{color:var(--danger);} .info-val.warn{color:var(--warn);}
-.sdiv{font-size:10px;font-family:var(--mono);color:var(--accent);text-transform:uppercase;letter-spacing:1.4px;margin:13px 0 7px;padding-bottom:5px;border-bottom:1px solid var(--border);}
-.gps-box{background:rgba(0,230,118,.06);border:1px solid rgba(0,230,118,.2);border-radius:10px;padding:11px 13px;margin-bottom:9px;display:flex;align-items:center;gap:10px;}
+.info-val.accent{color:var(--accent);}.info-val.success{color:var(--success);}.info-val.danger{color:var(--danger);}.info-val.warn{color:var(--warn);}
+.sdiv{font-size:10px;font-family:var(--mono);color:var(--accent);text-transform:uppercase;letter-spacing:1.4px;margin:12px 0 7px;padding-bottom:5px;border-bottom:1px solid var(--border);}
+.gps-box{background:rgba(0,230,118,.06);border:1px solid rgba(0,230,118,.2);border-radius:10px;padding:12px 14px;margin-bottom:10px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
 .gps-coords{font-family:var(--mono);font-size:13px;color:var(--success);font-weight:700;}
 .gps-addr{font-size:11px;color:var(--muted);margin-top:2px;}
+.maps-btn{display:inline-flex;align-items:center;gap:5px;padding:7px 13px;background:linear-gradient(135deg,#1a73e8,#0d47a1);color:#fff;text-decoration:none;border-radius:8px;font-size:12px;font-weight:600;white-space:nowrap;}
+.maps-btn:hover{opacity:.9;}
 
-/* ══ ANALYTICS ═════════════════════════════════════════════════════════ */
+/* ── LIVE TRACK PANEL ── */
+.live-panel{background:rgba(0,230,118,.04);border:1px solid rgba(0,230,118,.2);border-radius:12px;padding:14px 16px;margin-bottom:14px;display:none;}
+.live-panel.active{display:block;}
+.live-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;}
+.live-title{font-size:12px;font-weight:600;color:var(--success);display:flex;align-items:center;gap:8px;}
+.live-dot{width:8px;height:8px;background:var(--success);border-radius:50%;animation:blink 1s infinite;flex-shrink:0;}
+.live-info{font-size:11px;color:var(--muted);}
+.live-coords{font-family:var(--mono);font-size:12px;color:var(--success);}
+#live-map{height:200px;border-radius:8px;overflow:hidden;border:1px solid rgba(0,230,118,.2);margin-top:8px;}
+
+/* ── ANALYTICS ── */
 .analytics-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
 .bar-row{display:flex;align-items:center;gap:8px;margin-bottom:7px;}
 .bar-label{font-size:11px;color:var(--muted);width:90px;flex-shrink:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
@@ -198,7 +203,7 @@ tbody td{padding:8px 12px;vertical-align:middle;}
 .bar-fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));border-radius:3px;transition:width .6s;}
 .bar-count{font-family:var(--mono);font-size:11px;width:26px;text-align:right;}
 
-/* ══ A3 FLOAT ══════════════════════════════════════════════════════════ */
+/* ── A3 FLOAT ── */
 .a3-float{position:fixed;bottom:76px;right:18px;z-index:500;}
 .a3-btn{width:48px;height:48px;background:linear-gradient(135deg,var(--accent2),var(--accent));border-radius:13px;display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:16px;font-weight:700;color:#fff;box-shadow:0 4px 20px rgba(0,229,255,.28);cursor:pointer;transition:all .22s;}
 .a3-btn:hover{transform:scale(1.1) rotate(-3deg);}
@@ -210,44 +215,38 @@ tbody td{padding:8px 12px;vertical-align:middle;}
 .ig-handle{text-align:center;font-size:11px;color:var(--muted);margin-bottom:11px;}
 .ig-open{display:block;width:100%;padding:8px;background:linear-gradient(135deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888);color:#fff;text-align:center;border-radius:8px;text-decoration:none;font-size:12px;font-weight:600;}
 
-/* ══ TOAST ═════════════════════════════════════════════════════════════ */
+/* ── TOAST ── */
 .toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%);z-index:999;background:var(--card);border:1px solid var(--border);border-radius:10px;padding:10px 16px;font-size:13px;display:none;align-items:center;gap:8px;white-space:nowrap;box-shadow:0 4px 20px rgba(0,0,0,.3);}
 .toast.show{display:flex;}
-
-/* ══ EMPTY ═════════════════════════════════════════════════════════════ */
 .empty{text-align:center;padding:44px 16px;color:var(--muted);}
 .empty-icon{font-size:32px;margin-bottom:10px;}
 .empty p{font-size:13px;}
 
-/* ══ RESPONSIVE ════════════════════════════════════════════════════════ */
+/* ── RESPONSIVE ── */
 @media(max-width:768px){
   .desktop-nav{display:none;}
   .mobile-nav{display:flex!important;}
   .desktop-header{padding:0 14px;}
-  main{padding:16px 12px 72px;}
-  .stats-grid{grid-template-columns:repeat(2,1fr);gap:10px;}
+  main{padding:14px 12px 72px;}
+  .stats-grid{grid-template-columns:repeat(2,1fr);gap:9px;}
   .stat-val{font-size:22px;}
   .map-layout{grid-template-columns:1fr;grid-template-rows:auto auto;}
-  #map-container{height:350px;}
-  .visitor-sidebar{max-height:300px;}
+  #map-container{height:320px;}
+  .visitor-sidebar{height:280px;}
   .analytics-grid{grid-template-columns:1fr;}
   .info-grid{grid-template-columns:1fr;}
-  .table-wrap table{font-size:11px;}
-  thead th,tbody td{padding:8px 10px;}
+  .card{padding:13px 14px;}
   .a3-float{bottom:68px;right:14px;}
-  .card{padding:14px 15px;}
-  .user-chip .uname{display:none;}
 }
 @media(max-width:480px){
-  .auth-box{padding:24px 18px;}
+  .auth-box{padding:22px 16px;}
   .stats-grid{gap:8px;}
-  .stat-card{padding:13px;}
 }
 </style>
 </head>
 <body>
 
-<!-- ═══ AUTH ════════════════════════════════════════════════════════════ -->
+<!-- AUTH -->
 <div id="auth-page">
   <div class="auth-box">
     <div class="auth-logo">
@@ -260,25 +259,23 @@ tbody td{padding:8px 12px;vertical-align:middle;}
       <button class="auth-tab" onclick="switchTab('register')">Create Account</button>
     </div>
     <div id="tab-login">
-      <div class="field"><label>Username or Email</label><input type="text" id="l-user" placeholder="username or email" autocomplete="username" onkeydown="if(event.key==='Enter')doLogin()"></div>
+      <div class="field"><label>Username or Email</label><input type="text" id="l-user" placeholder="username or email" onkeydown="if(event.key==='Enter')doLogin()"></div>
       <div class="field"><label>Password</label><input type="password" id="l-pass" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()"></div>
       <button class="auth-btn" onclick="doLogin()">Sign In →</button>
       <div class="auth-err" id="l-err"></div>
     </div>
     <div id="tab-register" style="display:none">
-      <div class="field"><label>Username</label><input type="text" id="r-user" placeholder="choose a username" autocomplete="username"></div>
-      <div class="field"><label>Email</label><input type="email" id="r-email" placeholder="your@email.com" autocomplete="email"></div>
-      <div class="field"><label>Password</label><input type="password" id="r-pass" placeholder="min 6 characters" autocomplete="new-password"></div>
+      <div class="field"><label>Username</label><input type="text" id="r-user" placeholder="choose a username"></div>
+      <div class="field"><label>Email</label><input type="email" id="r-email" placeholder="your@email.com"></div>
+      <div class="field"><label>Password</label><input type="password" id="r-pass" placeholder="min 6 characters"></div>
       <button class="auth-btn" onclick="doRegister()">Create Account →</button>
       <div class="auth-err" id="r-err"></div>
     </div>
   </div>
 </div>
 
-<!-- ═══ APP ══════════════════════════════════════════════════════════════ -->
+<!-- APP -->
 <div id="app">
-
-<!-- Desktop header -->
 <header class="desktop-header">
   <div style="display:flex;align-items:center;gap:12px">
     <div class="logo"><div class="logo-dot"></div>TrackLink</div>
@@ -291,12 +288,11 @@ tbody td{padding:8px 12px;vertical-align:middle;}
     <button class="nav-btn" onclick="showView('analytics')">Analytics</button>
   </nav>
   <div class="header-right">
-    <div class="user-chip"><div class="user-dot"></div><span class="uname" id="header-user"></span></div>
+    <div class="user-chip"><div class="user-dot"></div><span id="header-user"></span></div>
     <button class="logout-btn" onclick="doLogout()">Logout</button>
   </div>
 </header>
 
-<!-- Mobile bottom nav -->
 <nav class="mobile-nav" id="mobile-nav">
   <button class="mob-btn active" onclick="showView('dashboard')"><span class="icon">🏠</span><span class="label">Home</span></button>
   <button class="mob-btn" onclick="showView('create')"><span class="icon">➕</span><span class="label">New</span></button>
@@ -309,11 +305,9 @@ tbody td{padding:8px 12px;vertical-align:middle;}
 
 <!-- DASHBOARD -->
 <div class="view active" id="view-dashboard">
-  <div style="margin-bottom:20px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px">
-    <div>
-      <h1 style="font-size:20px;font-weight:600;margin-bottom:3px">Hi, <span style="color:var(--accent)" id="dash-user"></span> 👋</h1>
-      <p style="font-size:12px;color:var(--muted)">Your visitor intelligence overview</p>
-    </div>
+  <div style="margin-bottom:18px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px">
+    <div><h1 style="font-size:20px;font-weight:600;margin-bottom:3px">Hi, <span style="color:var(--accent)" id="dash-user"></span> 👋</h1>
+    <p style="font-size:12px;color:var(--muted)">Visitor intelligence overview</p></div>
   </div>
   <div class="stats-grid">
     <div class="stat-card"><div class="stat-val" id="s-total">—</div><div class="stat-lbl">Total Clicks</div></div>
@@ -322,20 +316,15 @@ tbody td{padding:8px 12px;vertical-align:middle;}
     <div class="stat-card"><div class="stat-val" id="s-today">—</div><div class="stat-lbl">Today</div><div class="stat-sub" id="s-gps">— GPS</div></div>
   </div>
   <div class="card">
-    <div class="card-head">
-      <span class="card-title">Tracking Links</span>
-      <button class="btn btn-outline btn-sm" onclick="showView('create')">+ New</button>
-    </div>
+    <div class="card-head"><span class="card-title">Tracking Links</span><button class="btn btn-outline btn-sm" onclick="showView('create')">+ New</button></div>
     <div id="links-list"><div class="empty"><div class="empty-icon">🔗</div><p>No links yet.</p></div></div>
   </div>
 </div>
 
 <!-- CREATE -->
 <div class="view" id="view-create">
-  <div style="margin-bottom:20px">
-    <h2 style="font-size:19px;font-weight:600;margin-bottom:4px">Create Tracking Link</h2>
-    <p style="font-size:12px;color:var(--muted)">Every click captures GPS, IP, browser & device info.</p>
-  </div>
+  <div style="margin-bottom:18px"><h2 style="font-size:19px;font-weight:600;margin-bottom:4px">Create Tracking Link</h2>
+  <p style="font-size:12px;color:var(--muted)">Captures GPS, IP, device, battery, network & more.</p></div>
   <div class="card">
     <div class="input-row">
       <div class="input-group" style="flex:2"><label class="input-label">Destination URL *</label><input type="url" id="f-target" placeholder="https://yourwebsite.com"></div>
@@ -350,73 +339,68 @@ tbody td{padding:8px 12px;vertical-align:middle;}
     </div>
     <div class="result-box" id="result-box">
       <div class="result-url" id="result-url"></div>
-      <button class="copy-btn" onclick="copyResult()">📋</button>
+      <button class="copy-btn" onclick="copyResult()">📋 Copy</button>
       <button class="copy-btn" onclick="loadQR()" style="color:#a78bfa;border-color:rgba(124,58,237,.3)">QR</button>
     </div>
     <div class="qr-wrap" id="qr-wrap"><img id="qr-img" src="" alt="QR" width="160"><div style="font-size:11px;color:var(--muted);margin-top:7px">Scan to open</div></div>
   </div>
   <div class="card">
-    <div class="card-title" style="margin-bottom:13px">📍 Location Capture</div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:9px">
-      <div style="background:var(--surface);border:1px solid rgba(0,230,118,.2);border-radius:8px;padding:11px">
-        <div style="font-size:11px;color:var(--success);font-family:var(--mono);text-transform:uppercase;margin-bottom:4px">GPS Exact</div>
-        <div style="font-size:11px;color:var(--muted)">Browser asks permission → exact coordinates + address</div>
-      </div>
-      <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:11px">
-        <div style="font-size:11px;color:var(--muted);font-family:var(--mono);text-transform:uppercase;margin-bottom:4px">IP Fallback</div>
-        <div style="font-size:11px;color:var(--muted)">If GPS denied → city-level from IP address</div>
-      </div>
+    <div class="card-title" style="margin-bottom:12px">📡 What Gets Captured</div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:8px">
+      ${['📍 GPS Exact Location','🌐 IP Address & ISP','💻 Device & Browser','🔋 Battery Level','📶 Network Speed','🎮 WebGL GPU Info','🖥 Screen & Canvas','🌍 Reverse Geocode','📱 Connection Type','🔌 CPU & Memory','🕵️ Canvas Fingerprint','🔁 Live Motion Track'].map(i=>`<div style="background:var(--surface);border:1px solid var(--border);border-radius:7px;padding:9px 11px;font-size:11px;color:var(--muted)">${i}</div>`).join('')}
     </div>
   </div>
 </div>
 
 <!-- LOGS -->
 <div class="view" id="view-logs">
-  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:10px">
-    <div>
-      <h2 style="font-size:19px;font-weight:600;margin-bottom:3px">Visitor Logs</h2>
-      <p style="font-size:12px;color:var(--muted)">📍 = GPS captured</p>
-    </div>
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:10px">
+    <div><h2 style="font-size:19px;font-weight:600;margin-bottom:3px">Visitor Logs</h2>
+    <p style="font-size:12px;color:var(--muted)">📍 GPS &nbsp;·&nbsp; 🟢 Live tracking</p></div>
     <div style="display:flex;gap:7px;flex-wrap:wrap;align-items:center">
       <select id="log-filter" onchange="loadLogs()" style="width:auto;font-size:12px;padding:6px 10px"><option value="">All Links</option></select>
       <button class="btn btn-outline btn-sm" onclick="loadLogs()">↻</button>
-      <button class="btn btn-danger btn-sm" onclick="clearVisitors()">🗑 Clear All</button>
+      <button class="btn btn-danger btn-sm" onclick="clearVisitors()">🗑 Clear</button>
     </div>
   </div>
-  <div id="logs-container"><div class="empty"><div class="empty-icon">📭</div><p>No visits yet.</p></div></div>
+  <div id="logs-container"></div>
 </div>
 
 <!-- MAP -->
 <div class="view" id="view-map">
-  <div style="margin-bottom:14px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px">
-    <div>
-      <h2 style="font-size:19px;font-weight:600;margin-bottom:3px">🗺 Live Visitor Map</h2>
-      <p style="font-size:12px;color:var(--muted)">🟢 GPS exact &nbsp;·&nbsp; 🔵 IP-based · Click visitor to zoom</p>
+  <div style="margin-bottom:12px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px">
+    <div><h2 style="font-size:19px;font-weight:600;margin-bottom:3px">🗺 Live Map</h2>
+    <p style="font-size:12px;color:var(--muted)">🟢 GPS · 🔵 IP · Click visitor → zoom · 🔴 Live motion</p></div>
+    <button class="btn btn-danger btn-sm" onclick="clearVisitors()">🗑 Clear</button>
+  </div>
+  <!-- Live tracking panel -->
+  <div class="live-panel" id="live-panel">
+    <div class="live-header">
+      <div class="live-title"><div class="live-dot"></div>Live Tracking: <span id="live-ip" style="color:var(--accent)"></span></div>
+      <button class="btn btn-xs btn-outline" onclick="stopLiveTrack()">Stop</button>
     </div>
-    <button class="btn btn-danger btn-sm" onclick="clearVisitors()">🗑 Clear All</button>
+    <div class="live-info">
+      <span class="live-coords" id="live-coords">Waiting for update...</span>
+      <span style="margin-left:10px" id="live-time"></span>
+      <a id="live-maps-link" href="#" target="_blank" style="margin-left:10px;font-size:11px;color:var(--accent);text-decoration:none;border:1px solid rgba(0,229,255,.2);padding:3px 8px;border-radius:5px">📍 Maps</a>
+    </div>
+    <div id="live-map"></div>
   </div>
   <div class="map-layout">
-    <!-- Visitor list sidebar -->
     <div class="visitor-sidebar">
       <div class="sidebar-head">
         <span class="sidebar-title">Visitors (<span id="visitor-count">0</span>)</span>
-        <button class="btn btn-danger btn-sm" onclick="clearVisitors()" style="padding:4px 9px;font-size:11px">Clear</button>
+        <button class="btn btn-danger btn-xs" onclick="clearVisitors()">Clear</button>
       </div>
-      <div class="visitor-list" id="visitor-list">
-        <div class="empty" style="padding:24px"><p>No visitors yet.</p></div>
-      </div>
+      <div class="visitor-list" id="visitor-list"><div class="empty" style="padding:24px"><p>No visitors yet.</p></div></div>
     </div>
-    <!-- Map -->
     <div class="card" style="padding:0;overflow:hidden"><div id="map-container"></div></div>
   </div>
 </div>
 
 <!-- ANALYTICS -->
 <div class="view" id="view-analytics">
-  <div style="margin-bottom:18px">
-    <h2 style="font-size:19px;font-weight:600;margin-bottom:3px">Analytics</h2>
-    <p style="font-size:12px;color:var(--muted)">Visitor breakdowns</p>
-  </div>
+  <div style="margin-bottom:16px"><h2 style="font-size:19px;font-weight:600;margin-bottom:3px">Analytics</h2></div>
   <div class="analytics-grid">
     <div class="card"><div class="card-title" style="margin-bottom:12px">Top Countries</div><div id="a-countries"></div></div>
     <div class="card"><div class="card-title" style="margin-bottom:12px">Top Browsers</div><div id="a-browsers"></div></div>
@@ -428,7 +412,7 @@ tbody td{padding:8px 12px;vertical-align:middle;}
 </main>
 </div>
 
-<!-- ═══ A3 FLOAT ══════════════════════════════════════════════════════ -->
+<!-- A3 FLOAT -->
 <div class="a3-float" id="a3-float">
   <div class="ig-card" id="ig-card">
     <div class="ig-avatar">📸</div>
@@ -439,65 +423,51 @@ tbody td{padding:8px 12px;vertical-align:middle;}
   <div class="a3-btn" onclick="toggleIG()">A3</div>
 </div>
 
-<!-- ═══ DETAIL MODAL ═════════════════════════════════════════════════ -->
+<!-- DETAIL MODAL -->
 <div class="overlay" id="modal-overlay">
   <div class="modal">
     <div class="modal-title">Visitor Profile</div>
     <div class="modal-sub" id="modal-time"></div>
     <div id="modal-content"></div>
     <div class="modal-footer">
-      <button class="btn btn-danger btn-sm" id="modal-del-btn">Remove Visitor</button>
       <button class="btn btn-outline btn-sm" onclick="closeModal()">Close</button>
     </div>
   </div>
 </div>
 
-<!-- ═══ TOAST ════════════════════════════════════════════════════════ -->
+<!-- TOAST -->
 <div class="toast" id="toast"><span id="t-icon"></span><span id="t-msg"></span></div>
 
 <script>
-// ── STATE ─────────────────────────────────────────────────────────────────────
 let authToken = localStorage.getItem('tl_token')||'';
 let currentVisits = [];
-let mapInstance = null, mapMarkers = {}, selectedVisitId = null;
+let mapInstance = null, mapMarkers = {}, trailLayers = {};
+let liveMap = null, liveMarker = null, liveSSE = null, liveVisitId = null;
 let igOpen = false;
 
-// ── UTIL ──────────────────────────────────────────────────────────────────────
 const esc = s=>String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 function timeAgo(iso){
   const d=Math.floor((Date.now()-new Date(iso).getTime())/1000);
-  if(d<60) return d+'s ago';
-  if(d<3600) return Math.floor(d/60)+'m ago';
-  if(d<86400) return Math.floor(d/3600)+'h ago';
-  return new Date(iso).toLocaleDateString();
+  if(d<60)return d+'s ago';if(d<3600)return Math.floor(d/60)+'m ago';
+  if(d<86400)return Math.floor(d/3600)+'h ago';return new Date(iso).toLocaleDateString();
 }
 function flag(code){
-  if(!code||code.length!==2||['LO','??'].includes(code)) return '🌐';
+  if(!code||code.length!==2||['LO','??'].includes(code))return '🌐';
   return String.fromCodePoint(...[...code.toUpperCase()].map(c=>c.charCodeAt(0)+127397));
 }
-function devBadge(d){
-  const t=(d||'desktop').toLowerCase();
-  return `<span class="badge badge-${t}">${t.charAt(0).toUpperCase()+t.slice(1)}</span>`;
-}
+function devBadge(d){const t=(d||'desktop').toLowerCase();return `<span class="badge badge-${t}">${t.charAt(0).toUpperCase()+t.slice(1)}</span>`;}
 function toast(msg,icon='✓'){
   document.getElementById('t-msg').textContent=msg;
   document.getElementById('t-icon').textContent=icon;
-  const el=document.getElementById('toast');
-  el.classList.add('show');
+  const el=document.getElementById('toast');el.classList.add('show');
   setTimeout(()=>el.classList.remove('show'),2800);
 }
-function goIG(){ window.open('https://instagram.com/a3_achu','_blank'); }
-function toggleIG(){
-  igOpen=!igOpen;
-  document.getElementById('ig-card').classList.toggle('show',igOpen);
-}
+function goIG(){window.open('https://instagram.com/a3_achu','_blank');}
+function toggleIG(){igOpen=!igOpen;document.getElementById('ig-card').classList.toggle('show',igOpen);}
 document.addEventListener('click',e=>{
-  if(!document.getElementById('a3-float').contains(e.target)){
-    igOpen=false; document.getElementById('ig-card').classList.remove('show');
-  }
+  if(!document.getElementById('a3-float').contains(e.target)){igOpen=false;document.getElementById('ig-card').classList.remove('show');}
 });
 
-// ── API ───────────────────────────────────────────────────────────────────────
 async function api(method,path,body){
   const opts={method,headers:{'Content-Type':'application/json','x-auth-token':authToken}};
   if(body) opts.body=JSON.stringify(body);
@@ -520,8 +490,7 @@ async function doLogin(){
     const res=await fetch('/api/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username,password})});
     const d=await res.json();
     if(!res.ok){showAErr('l-err',d.error||'Login failed');return;}
-    authToken=d.token; localStorage.setItem('tl_token',authToken);
-    setUser(d.username); showApp();
+    authToken=d.token;localStorage.setItem('tl_token',authToken);setUser(d.username);showApp();
   }catch(e){showAErr('l-err','Server error');}
 }
 async function doRegister(){
@@ -533,32 +502,14 @@ async function doRegister(){
     const res=await fetch('/api/register',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username,email,password})});
     const d=await res.json();
     if(!res.ok){showAErr('r-err',d.error||'Failed');return;}
-    authToken=d.token; localStorage.setItem('tl_token',authToken);
-    setUser(d.username); showApp();
+    authToken=d.token;localStorage.setItem('tl_token',authToken);setUser(d.username);showApp();
   }catch(e){showAErr('r-err','Server error');}
 }
-function showAErr(id,msg){
-  const el=document.getElementById(id);
-  el.textContent=msg; el.style.display='block';
-  setTimeout(()=>el.style.display='none',4000);
-}
-async function doLogout(){
-  await api('POST','/api/logout');
-  authToken=''; localStorage.removeItem('tl_token'); showAuth();
-}
-function setUser(u){
-  document.getElementById('header-user').textContent=u;
-  document.getElementById('dash-user').textContent=u;
-}
-function showAuth(){
-  document.getElementById('app').style.display='none';
-  document.getElementById('auth-page').style.display='flex';
-}
-function showApp(){
-  document.getElementById('auth-page').style.display='none';
-  document.getElementById('app').style.display='block';
-  showView('dashboard');
-}
+function showAErr(id,msg){const el=document.getElementById(id);el.textContent=msg;el.style.display='block';setTimeout(()=>el.style.display='none',4000);}
+async function doLogout(){await api('POST','/api/logout');authToken='';localStorage.removeItem('tl_token');showAuth();}
+function setUser(u){document.getElementById('header-user').textContent=u;document.getElementById('dash-user').textContent=u;}
+function showAuth(){document.getElementById('app').style.display='none';document.getElementById('auth-page').style.display='flex';}
+function showApp(){document.getElementById('auth-page').style.display='none';document.getElementById('app').style.display='block';showView('dashboard');}
 
 // ── VIEWS ─────────────────────────────────────────────────────────────────────
 function showView(name){
@@ -567,20 +518,17 @@ function showView(name){
   document.getElementById('view-'+name).classList.add('active');
   const names=['dashboard','create','logs','map','analytics'];
   const idx=names.indexOf(name);
-  if(idx>=0){
-    document.querySelectorAll('.nav-btn')[idx]?.classList.add('active');
-    document.querySelectorAll('.mob-btn')[idx]?.classList.add('active');
-  }
-  if(name==='dashboard') loadDashboard();
-  if(name==='logs')      loadLogs();
-  if(name==='map')       loadMap();
-  if(name==='analytics') loadAnalytics();
+  if(idx>=0){document.querySelectorAll('.nav-btn')[idx]?.classList.add('active');document.querySelectorAll('.mob-btn')[idx]?.classList.add('active');}
+  if(name==='dashboard')loadDashboard();
+  if(name==='logs')loadLogs();
+  if(name==='map')loadMap();
+  if(name==='analytics')loadAnalytics();
 }
 
 // ── DASHBOARD ─────────────────────────────────────────────────────────────────
 async function loadDashboard(){
   const [stats,links]=await Promise.all([api('GET','/api/stats'),api('GET','/api/links')]);
-  if(!stats||!links) return;
+  if(!stats||!links)return;
   document.getElementById('s-total').textContent=stats.total_clicks;
   document.getElementById('s-unique').textContent=stats.unique_ips;
   document.getElementById('s-links').textContent=stats.total_links;
@@ -591,18 +539,14 @@ async function loadDashboard(){
   el.innerHTML=links.map(l=>`
     <div class="link-row" onclick="showView('logs');filterLogs('${l.id}')">
       <div class="link-icon">🔗</div>
-      <div class="link-info">
-        <div class="link-name">${esc(l.label)}</div>
-        <div class="link-target">${esc(l.target)}</div>
-      </div>
+      <div class="link-info"><div class="link-name">${esc(l.label)}</div><div class="link-target">${esc(l.target)}</div></div>
       <div class="link-clicks">${l.clicks||0}<small>clicks</small></div>
       <button class="btn-ghost" onclick="event.stopPropagation();deleteLink('${l.id}')">🗑</button>
     </div>`).join('');
 }
 async function deleteLink(id){
-  if(!confirm('Delete this link and all its logs?')) return;
-  await api('DELETE','/api/links/'+id);
-  loadDashboard(); toast('Deleted','🗑️');
+  if(!confirm('Delete link and all its logs?'))return;
+  await api('DELETE','/api/links/'+id);loadDashboard();toast('Deleted','🗑️');
 }
 
 // ── CREATE ────────────────────────────────────────────────────────────────────
@@ -612,106 +556,92 @@ async function createLink(){
   const slug=document.getElementById('f-slug').value.trim();
   if(!target){toast('Enter a destination URL','⚠️');return;}
   const data=await api('POST','/api/links',{target,label,slug});
-  if(!data) return;
+  if(!data)return;
   if(data.error){toast(data.error,'❌');return;}
   const trackUrl=`${location.origin}/t/${data.slug}`;
   document.getElementById('result-url').textContent=trackUrl;
   document.getElementById('result-box').classList.add('show');
   document.getElementById('qr-wrap').style.display='none';
-  toast('Link created! 🎉','🔗');
+  toast('Link created!','🔗');
 }
-function clearCreate(){
-  ['f-target','f-label','f-slug'].forEach(id=>document.getElementById(id).value='');
-  document.getElementById('result-box').classList.remove('show');
-  document.getElementById('qr-wrap').style.display='none';
-}
-function copyResult(){
-  navigator.clipboard.writeText(document.getElementById('result-url').textContent).then(()=>toast('Copied!','✓'));
-}
+function clearCreate(){['f-target','f-label','f-slug'].forEach(id=>document.getElementById(id).value='');document.getElementById('result-box').classList.remove('show');document.getElementById('qr-wrap').style.display='none';}
+function copyResult(){navigator.clipboard.writeText(document.getElementById('result-url').textContent).then(()=>toast('Copied!','✓'));}
 async function loadQR(){
   const url=document.getElementById('result-url').textContent;
-  if(!url) return;
+  if(!url)return;
   const data=await api('GET',`/api/qr?url=${encodeURIComponent(url)}`);
-  if(!data) return;
+  if(!data)return;
   document.getElementById('qr-img').src=data.qr;
   document.getElementById('qr-wrap').style.display='block';
 }
 
 // ── LOGS ──────────────────────────────────────────────────────────────────────
 async function loadLogs(){
-  const links=await api('GET','/api/links');
-  if(!links) return;
-  const sel=document.getElementById('log-filter');
-  const cur=sel.value;
+  const links=await api('GET','/api/links');if(!links)return;
+  const sel=document.getElementById('log-filter');const cur=sel.value;
   sel.innerHTML='<option value="">All Links</option>'+links.map(l=>`<option value="${l.id}">${esc(l.label)}</option>`).join('');
-  if(cur) sel.value=cur;
+  if(cur)sel.value=cur;
   const link_id=sel.value;
   currentVisits=await api('GET',link_id?`/api/visits?link_id=${link_id}`:'/api/visits')||[];
   const el=document.getElementById('logs-container');
   if(!currentVisits.length){el.innerHTML=`<div class="empty"><div class="empty-icon">📭</div><p>No visits yet.</p></div>`;return;}
-  el.innerHTML=`
-    <div class="table-wrap"><table>
-      <thead><tr><th>IP</th><th>Location</th><th>ISP</th><th>Device</th><th>Browser</th><th>Time</th><th>Flags</th><th></th></tr></thead>
-      <tbody>
-      ${currentVisits.map(v=>`<tr>
-        <td class="td-ip">${esc(v.ip)}<br><span class="muted">${esc(v.ip_type||'')}</span></td>
-        <td><div style="display:flex;align-items:center;gap:6px">
-          <span style="font-size:14px">${flag(v.country_code)}</span>
-          <div>
-            <div style="font-size:12px">${v.gps_lat&&v.gps_lat!==0?'📍 ':''}${esc(v.gps_address?v.gps_address.split(',').slice(0,2).join(','):v.city||'—')}</div>
-            <div class="muted">${esc(v.country||'—')}</div>
-          </div>
-        </div></td>
-        <td><div style="font-size:11px">${esc(v.isp||'—')}</div></td>
-        <td>${devBadge(v.device)}</td>
-        <td><div style="font-size:11px">${esc(v.browser||'—')} ${esc(v.browser_ver||'')}</div><div class="muted">${esc(v.os||'—')}</div></td>
-        <td class="muted">${timeAgo(v.time)}</td>
-        <td>
-          ${v.gps_lat&&v.gps_lat!==0?'<span class="badge badge-gps">📍</span>':''}
-          ${v.is_proxy?'<span class="badge badge-proxy">VPN</span>':''}
-        </td>
-        <td style="display:flex;gap:5px">
-          <button class="copy-btn" onclick="showDetail('${v.id}')">Detail</button>
-          <button class="btn-ghost" onclick="removeVisitor('${v.id}')" title="Remove">✕</button>
-        </td>
-      </tr>`).join('')}
-      </tbody>
-    </table></div>`;
+  el.innerHTML=`<div class="table-wrap"><table>
+    <thead><tr><th>IP</th><th>Location</th><th>ISP/Net</th><th>Device</th><th>Browser/OS</th><th>Battery</th><th>Time</th><th>Flags</th><th></th></tr></thead>
+    <tbody>${currentVisits.map(v=>`<tr>
+      <td class="td-ip">${esc(v.ip)}<br><span class="muted">${esc(v.ip_type||'')}</span></td>
+      <td><div style="display:flex;align-items:center;gap:6px"><span style="font-size:14px">${flag(v.country_code)}</span>
+        <div><div style="font-size:12px">${v.gps_lat&&v.gps_lat!==0?'📍 ':''}${esc(v.gps_address?v.gps_address.split(',').slice(0,2).join(','):v.city||'—')}</div>
+        <div class="muted">${esc(v.country||'—')}</div></div></div></td>
+      <td><div style="font-size:11px">${esc(v.isp||'—')}</div><div class="muted">${esc(v.connection_type||'')}${v.connection_speed?' · '+v.connection_speed+'Mbps':''}</div></td>
+      <td>${devBadge(v.device)}<br><span class="muted">${esc(v.device_brand||'')} ${esc(v.device_model||'')}</span></td>
+      <td><div style="font-size:11px">${esc(v.browser||'—')} ${esc(v.browser_ver||'')}</div><div class="muted">${esc(v.os||'—')}</div></td>
+      <td><div style="font-size:11px">${v.battery_level||'—'}</div><div class="muted">${esc(v.battery_charging||'')}</div></td>
+      <td class="muted">${timeAgo(v.time)}</td>
+      <td>
+        ${v.gps_lat&&v.gps_lat!==0?'<span class="badge badge-gps">📍</span>':''}
+        ${v.live_updated?'<span class="badge badge-live">🔴Live</span>':''}
+        ${v.is_proxy?'<span class="badge badge-proxy">VPN</span>':''}
+      </td>
+      <td style="display:flex;gap:4px;align-items:center">
+        <button class="copy-btn" onclick="showDetail('${v.id}')">Detail</button>
+        <button class="copy-btn" style="color:var(--success);border-color:rgba(0,230,118,.3)" onclick="startTrackFromLogs('${v.id}')">🔴Track</button>
+        <button class="btn-ghost" onclick="removeVisitor('${v.id}')">✕</button>
+      </td>
+    </tr>`).join('')}</tbody></table></div>`;
 }
 function filterLogs(id){document.getElementById('log-filter').value=id;loadLogs();}
 
-// ── CLEAR / REMOVE VISITORS ───────────────────────────────────────────────────
+// ── CLEAR / REMOVE ────────────────────────────────────────────────────────────
 async function clearVisitors(){
   const link_id=document.getElementById('log-filter')?.value||'';
-  if(!confirm('Clear all visitor logs'+(link_id?' for this link':'')+' ?')) return;
-  const url=link_id?`/api/visits?link_id=${link_id}`:'/api/visits';
-  await api('DELETE',url);
+  if(!confirm('Clear all visitor logs?'))return;
+  await api('DELETE',link_id?`/api/visits?link_id=${link_id}`:'/api/visits');
   currentVisits=[];
-  loadLogs();
-  if(mapInstance){mapMarkers={};loadMap();}
-  loadDashboard();
-  toast('Visitors cleared','🗑️');
+  if(document.getElementById('view-logs').classList.contains('active'))loadLogs();
+  if(document.getElementById('view-map').classList.contains('active'))loadMap();
+  loadDashboard();toast('Cleared','🗑️');
 }
 async function removeVisitor(id){
   await api('DELETE','/api/visits/'+id);
   currentVisits=currentVisits.filter(v=>v.id!==id);
-  // remove from map
   if(mapMarkers[id]){mapMarkers[id].remove();delete mapMarkers[id];}
-  loadLogs(); loadDashboard();
-  toast('Visitor removed','✕');
+  if(trailLayers[id]){trailLayers[id].forEach(l=>l.remove());delete trailLayers[id];}
+  document.getElementById('vi-'+id)?.remove();
+  const c=document.getElementById('visitor-count');
+  if(c)c.textContent=Math.max(0,parseInt(c.textContent||0)-1);
+  if(document.getElementById('view-logs').classList.contains('active'))loadLogs();
+  loadDashboard();toast('Removed','✕');
 }
 
 // ── VISITOR DETAIL ────────────────────────────────────────────────────────────
-let detailVisitId=null;
 function showDetail(id){
-  const v=currentVisits.find(x=>x.id===id);
-  if(!v) return;
-  detailVisitId=id;
+  const v=currentVisits.find(x=>x.id===id);if(!v)return;
   document.getElementById('modal-time').textContent='Visited '+new Date(v.time).toLocaleString();
-  document.getElementById('modal-del-btn').onclick=()=>{closeModal();removeVisitor(id);};
 
   let html='';
+  // GPS box with Google Maps auto link
   if(v.gps_lat&&v.gps_lat!==0){
+    const mapsUrl=`https://www.google.com/maps?q=${v.gps_lat},${v.gps_lon}`;
     html+=`<div class="gps-box">
       <div style="font-size:22px">📍</div>
       <div style="flex:1">
@@ -719,23 +649,37 @@ function showDetail(id){
         <div class="gps-addr">${esc(v.gps_address||'GPS captured')}</div>
         ${v.gps_accuracy?`<div style="font-size:10px;color:var(--muted);margin-top:2px">±${Math.round(v.gps_accuracy)}m accuracy</div>`:''}
       </div>
-      <a href="https://www.google.com/maps?q=${v.gps_lat},${v.gps_lon}" target="_blank" style="font-size:11px;color:var(--accent);text-decoration:none;border:1px solid rgba(0,229,255,.2);padding:5px 9px;border-radius:6px;white-space:nowrap">Maps</a>
+      <a href="${mapsUrl}" target="_blank" class="maps-btn">🗺 Google Maps</a>
+    </div>`;
+  }
+
+  // Live position if available
+  if(v.live_lat&&v.live_lat!==0){
+    const liveUrl=`https://www.google.com/maps?q=${v.live_lat},${v.live_lon}`;
+    html+=`<div class="gps-box" style="background:rgba(255,71,87,.05);border-color:rgba(255,71,87,.2)">
+      <div style="font-size:22px">🔴</div>
+      <div style="flex:1">
+        <div style="font-family:var(--mono);font-size:13px;color:var(--danger);font-weight:700">${v.live_lat.toFixed(6)}, ${v.live_lon.toFixed(6)}</div>
+        <div style="font-size:11px;color:var(--muted)">Last live position · ${timeAgo(v.live_updated)}</div>
+      </div>
+      <a href="${liveUrl}" target="_blank" class="maps-btn" style="background:linear-gradient(135deg,#c62828,#b71c1c)">🗺 Live Maps</a>
     </div>`;
   }
 
   const sections=[
-    {t:'🌐 Network',items:[['IP',v.ip,'accent'],['Type',v.ip_type||'—',v.ip_type==='hosting'?'warn':''],['Proxy/VPN',v.is_proxy?'⚠️ Yes':'✅ No',v.is_proxy?'danger':'success'],['Mobile ISP',v.is_mobile?'Yes':'No',''],['ISP',v.isp||'—',''],['Org',v.org||'—',''],['AS',v.as_number||'—','']]},
-    {t:'📍 Location',items:[['Country',flag(v.country_code)+' '+(v.country||'—'),''],['City',v.city||'—',''],['Region',v.region||'—',''],['ZIP',v.zip||'—',''],['IP Coords',v.lat&&v.lon?`${v.lat.toFixed(4)}, ${v.lon.toFixed(4)}`:'—',''],['GPS Coords',v.gps_lat&&v.gps_lat!==0?`${v.gps_lat.toFixed(6)}, ${v.gps_lon.toFixed(6)}`:'Not captured',v.gps_lat&&v.gps_lat!==0?'success':''],['GPS Accuracy',v.gps_accuracy?'±'+Math.round(v.gps_accuracy)+'m':'—',''],['Timezone',v.timezone||'—','']]},
-    {t:'💻 Device',items:[['Device',v.device||'Desktop',''],['Brand/Model',(v.device_brand||'—')+' '+(v.device_model||''),''],['Browser',(v.browser||'—')+' '+(v.browser_ver||''),''],['Engine',v.browser_engine||'—',''],['OS',(v.os||'—')+' '+(v.os_ver||''),''],['CPU',v.cpu_arch||'—',''],['Platform',v.platform||'—','']]},
-    {t:'🖥 Screen',items:[['Resolution',v.screen||'—',''],['Color Depth',v.color_depth?v.color_depth+' bit':'—',''],['Language',v.language||'—',''],['Browser TZ',v.timezone_client||'—','']]},
-    {t:'🔗 Visit',items:[['Referrer',v.referrer||'Direct',''],['From',v.referrer_domain||'Direct',''],['Link',v.link_label||'—',''],['Time',new Date(v.time).toLocaleString(),'']]}
+    {t:'🌐 Network & IP',items:[['IP',v.ip,'accent'],['Type',v.ip_type||'—',v.ip_type==='hosting'?'warn':''],['Proxy/VPN',v.is_proxy?'⚠️ Yes':'✅ No',v.is_proxy?'danger':'success'],['Mobile ISP',v.is_mobile?'Yes':'No',''],['ISP',v.isp||'—',''],['Organization',v.org||'—',''],['AS Number',v.as_number||'—','']]},
+    {t:'📍 Location',items:[['Country',flag(v.country_code)+' '+(v.country||'—'),''],['City',v.city||'—',''],['Region',v.region||'—',''],['ZIP',v.zip||'—',''],['IP Coords',v.lat&&v.lon?`${v.lat.toFixed(4)}, ${v.lon.toFixed(4)}`:'—',''],['GPS Coords',v.gps_lat&&v.gps_lat!==0?`${v.gps_lat.toFixed(6)}, ${v.gps_lon.toFixed(6)}`:'Not captured',v.gps_lat&&v.gps_lat!==0?'success':''],['GPS Accuracy',v.gps_accuracy?'±'+Math.round(v.gps_accuracy)+'m':'—',''],['GPS Address',v.gps_address||'—',''],['Server TZ',v.timezone||'—',''],['Browser TZ',v.timezone_client||'—','']]},
+    {t:'💻 Device & Browser',items:[['Device',v.device||'Desktop',''],['Brand/Model',(v.device_brand||'—')+' '+(v.device_model||''),''],['Browser',(v.browser||'—')+' '+(v.browser_ver||''),''],['Engine',v.browser_engine||'—',''],['OS',(v.os||'—')+' '+(v.os_ver||''),''],['CPU Arch',v.cpu_arch||'—',''],['Platform',v.platform||'—',''],['CPU Cores',v.cpu_cores||'—',''],['RAM',v.memory_gb?v.memory_gb+' GB':'—',''],['Touch Points',v.touch_points||'—','']]},
+    {t:'📶 Network & Battery',items:[['Connection',v.connection_type||'—',''],['Speed',v.connection_speed?v.connection_speed+' Mbps':'—',''],['Battery',v.battery_level||'—',v.battery_level&&v.battery_level!=='—'?'success':''],['Charging',v.battery_charging||'—',v.battery_charging==='Charging'?'success':''],['Do Not Track',v.do_not_track||'—','']]},
+    {t:'🎮 Hardware Fingerprint',items:[['WebGL Vendor',v.webgl_vendor||'—',''],['GPU Renderer',v.webgl_renderer||'—','accent'],['Canvas FP',v.canvas_fp||'—','warn'],['Plugins',v.plugins||'—','']]},
+    {t:'🖥 Screen',items:[['Resolution',v.screen||'—',''],['Color Depth',v.color_depth?v.color_depth+' bit':'—',''],['Language',v.language||'—','']]},
+    {t:'🔗 Visit',items:[['Referrer',v.referrer||'Direct',''],['From Domain',v.referrer_domain||'Direct',''],['Link',v.link_label||'—',''],['Visit Time',new Date(v.time).toLocaleString(),''],['Live Updated',v.live_updated?timeAgo(v.live_updated):'No live data','']]}
   ];
 
   html+=sections.map(s=>`
     <div class="sdiv">${s.t}</div>
-    <div class="info-grid">
-      ${s.items.map(([k,val,cls])=>`<div class="info-item"><div class="info-key">${k}</div><div class="info-val ${cls}">${esc(String(val))}</div></div>`).join('')}
-    </div>`).join('');
+    <div class="info-grid">${s.items.map(([k,val,cls])=>`<div class="info-item"><div class="info-key">${k}</div><div class="info-val ${cls}">${esc(String(val))}</div></div>`).join('')}</div>
+  `).join('');
 
   html+=`<div class="sdiv">🤖 User Agent</div><div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:9px 11px;font-family:var(--mono);font-size:10px;color:var(--muted);word-break:break-all">${esc(v.ua||'—')}</div>`;
 
@@ -746,88 +690,174 @@ function closeModal(){document.getElementById('modal-overlay').classList.remove(
 
 // ── MAP ───────────────────────────────────────────────────────────────────────
 async function loadMap(){
-  const stats=await api('GET','/api/stats');
-  if(!stats) return;
+  const stats=await api('GET','/api/stats');if(!stats)return;
 
   if(!mapInstance){
     mapInstance=L.map('map-container',{center:[20,0],zoom:2,zoomControl:true,attributionControl:false});
     L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{maxZoom:19,subdomains:'abcd'}).addTo(mapInstance);
   }
 
-  // Clear old markers
   Object.values(mapMarkers).forEach(m=>m.remove());
   mapMarkers={};
+  Object.values(trailLayers).forEach(arr=>arr.forEach(l=>l.remove()));
+  trailLayers={};
 
   const points=stats.map_points||[];
-  points.forEach(p=>{
+  for(const p of points){
     const hasGPS=p.gps_lat&&p.gps_lat!==0;
+    const hasLive=p.live_lat&&p.live_lat!==0;
     const lat=hasGPS?p.gps_lat:p.lat;
     const lon=hasGPS?p.gps_lon:p.lon;
-    if(!lat||!lon) return;
-    const color=hasGPS?'#00e676':(p.device==='mobile'?'#a78bfa':p.device==='tablet'?'#ffd600':'#00e5ff');
-    const m=L.circleMarker([lat,lon],{radius:hasGPS?9:6,fillColor:color,color:'rgba(255,255,255,.25)',weight:1.5,opacity:1,fillOpacity:.85}).addTo(mapInstance);
-    m.bindPopup(`<div style="font-family:sans-serif;font-size:12px;background:#13131f;color:#e8e8f4;border-radius:8px;padding:10px;min-width:150px">
-      <div style="color:${color};font-weight:700;margin-bottom:4px">${hasGPS?'📍 GPS':'🌐 IP'}</div>
+    if(!lat||!lon)continue;
+    const color=hasLive?'#ff4757':(hasGPS?'#00e676':(p.device==='mobile'?'#a78bfa':'#00e5ff'));
+    const m=L.circleMarker([lat,lon],{radius:hasLive?10:(hasGPS?8:6),fillColor:color,color:'rgba(255,255,255,.3)',weight:1.5,opacity:1,fillOpacity:.85}).addTo(mapInstance);
+    m.bindPopup(`<div style="font-family:sans-serif;font-size:12px;background:#13131f;color:#e8e8f4;border-radius:8px;padding:10px;min-width:160px">
+      <div style="color:${color};font-weight:700;margin-bottom:4px">${hasLive?'🔴 LIVE':(hasGPS?'📍 GPS':'🌐 IP')}</div>
       <div>${flag(p.country_code)} ${esc(p.city||'')}, ${esc(p.country||'')}</div>
       <div style="color:#5a5a72;font-size:11px">${esc(p.ip)}</div>
       <div style="color:#5a5a72;font-size:11px">${esc(p.browser||'')} · ${esc(p.device||'')}</div>
       <div style="color:#5a5a72;font-size:11px">${timeAgo(p.time)}</div>
     </div>`,{maxWidth:200});
-    if(p.id) mapMarkers[p.id]=m;
-  });
+    if(p.id)mapMarkers[p.id]=m;
+  }
 
-  // Render visitor list
+  // Visitor list
   const listEl=document.getElementById('visitor-list');
   document.getElementById('visitor-count').textContent=points.length;
   if(!points.length){listEl.innerHTML='<div class="empty" style="padding:24px"><p>No visitors yet.</p></div>';return;}
   listEl.innerHTML=points.map(p=>{
     const hasGPS=p.gps_lat&&p.gps_lat!==0;
+    const hasLive=p.live_lat&&p.live_lat!==0;
     const lat=hasGPS?p.gps_lat:p.lat;
     const lon=hasGPS?p.gps_lon:p.lon;
-    return `<div class="visitor-item" id="vi-${p.id}" onclick="zoomToVisitor('${p.id}',${lat},${lon})">
+    return `<div class="visitor-item ${hasLive?'live-active':''}" id="vi-${p.id}" onclick="zoomToVisitor('${p.id}',${lat},${lon})">
       <span class="vi-flag">${flag(p.country_code)}</span>
       <div class="vi-info">
         <div class="vi-ip">${esc(p.ip)}</div>
         <div class="vi-loc">${esc(p.gps_address?p.gps_address.split(',')[0]:p.city||'Unknown')}, ${esc(p.country||'')}</div>
         <div class="vi-time">${timeAgo(p.time)} · ${esc(p.browser||'')}</div>
-        ${hasGPS?`<div class="vi-gps">📍 GPS: ${lat.toFixed(4)}, ${lon.toFixed(4)}</div>`:''}
+        ${hasGPS?`<div class="vi-gps">📍 ${lat.toFixed(4)}, ${lon.toFixed(4)}</div>`:''}
+        ${hasLive?`<div class="vi-live">Live tracking active</div>`:''}
       </div>
-      <button class="vi-del" onclick="event.stopPropagation();removeFromMap('${p.id}')" title="Remove">✕</button>
+      <div class="vi-actions">
+        <button class="vi-track ${hasLive?'tracking':''}" onclick="event.stopPropagation();startLiveTrack('${p.id}','${esc(p.ip)}')" title="Live Track">🔴</button>
+        <button class="vi-del" onclick="event.stopPropagation();removeFromMap('${p.id}')" title="Remove">✕</button>
+      </div>
     </div>`;}).join('');
 }
 
 function zoomToVisitor(id,lat,lon){
-  // Highlight in list
   document.querySelectorAll('.visitor-item').forEach(el=>el.classList.remove('selected'));
   document.getElementById('vi-'+id)?.classList.add('selected');
-  // Zoom map
   if(mapInstance&&lat&&lon){
-    mapInstance.flyTo([lat,lon],15,{animate:true,duration:1.2});
-    if(mapMarkers[id]) mapMarkers[id].openPopup();
+    mapInstance.flyTo([lat,lon],16,{animate:true,duration:1.4});
+    if(mapMarkers[id])mapMarkers[id].openPopup();
   }
-  selectedVisitId=id;
 }
 
 async function removeFromMap(id){
-  if(!confirm('Remove this visitor?')) return;
+  if(!confirm('Remove this visitor?'))return;
   await api('DELETE','/api/visits/'+id);
   if(mapMarkers[id]){mapMarkers[id].remove();delete mapMarkers[id];}
   document.getElementById('vi-'+id)?.remove();
-  const count=document.getElementById('visitor-count');
-  count.textContent=Math.max(0,parseInt(count.textContent)-1);
+  const c=document.getElementById('visitor-count');
+  if(c)c.textContent=Math.max(0,parseInt(c.textContent||0)-1);
   currentVisits=currentVisits.filter(v=>v.id!==id);
-  loadDashboard();
-  toast('Visitor removed','✕');
+  loadDashboard();toast('Removed','✕');
+}
+
+// ── LIVE TRACKING ─────────────────────────────────────────────────────────────
+function startTrackFromLogs(id){
+  const v=currentVisits.find(x=>x.id===id);
+  if(v)startLiveTrack(id,v.ip);
+  showView('map');
+}
+
+function startLiveTrack(visitId, ip){
+  stopLiveTrack();
+  liveVisitId=visitId;
+
+  // Show panel
+  const panel=document.getElementById('live-panel');
+  panel.classList.add('active');
+  document.getElementById('live-ip').textContent=ip||visitId;
+
+  // Init mini map
+  if(!liveMap){
+    liveMap=L.map('live-map',{zoomControl:false,attributionControl:false});
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{maxZoom:19,subdomains:'abcd'}).addTo(liveMap);
+  }
+
+  // SSE connection
+  liveSSE=new EventSource(`/api/motion-stream/${visitId}?token=${authToken}`);
+  liveSSE.onmessage=e=>{
+    try{
+      const d=JSON.parse(e.data);
+      updateLivePosition(d.lat,d.lon,d.time,d.accuracy);
+    }catch(_){}
+  };
+  liveSSE.onerror=()=>{
+    document.getElementById('live-coords').textContent='Waiting for visitor movement...';
+  };
+
+  // Also draw motion trail from history
+  loadMotionTrail(visitId);
+
+  toast('Live tracking started 🔴','📡');
+}
+
+async function loadMotionTrail(visitId){
+  const log=await api('GET',`/api/motion/${visitId}`);
+  if(!log||!log.length)return;
+  const coords=log.map(p=>[p.lat,p.lon]);
+  if(trailLayers[visitId])trailLayers[visitId].forEach(l=>l.remove());
+  trailLayers[visitId]=[];
+  // Draw trail on main map
+  if(mapInstance&&coords.length>1){
+    const line=L.polyline(coords,{color:'#ff4757',weight:2,opacity:.7,dashArray:'4,4'}).addTo(mapInstance);
+    trailLayers[visitId].push(line);
+    mapInstance.fitBounds(line.getBounds(),{padding:[30,30]});
+  }
+  // Last point
+  const last=log[log.length-1];
+  updateLivePosition(last.lat,last.lon,last.time,last.accuracy);
+}
+
+function updateLivePosition(lat,lon,time,accuracy){
+  document.getElementById('live-coords').textContent=`${lat.toFixed(6)}, ${lon.toFixed(6)}`;
+  document.getElementById('live-time').textContent=time?'· '+timeAgo(time):'';
+  const mapsUrl=`https://www.google.com/maps?q=${lat},${lon}`;
+  document.getElementById('live-maps-link').href=mapsUrl;
+
+  // Update mini map
+  if(liveMap){
+    liveMap.setView([lat,lon],16);
+    if(liveMarker)liveMarker.remove();
+    liveMarker=L.circleMarker([lat,lon],{radius:10,fillColor:'#ff4757',color:'#fff',weight:2,fillOpacity:.9}).addTo(liveMap);
+    liveMarker.bindPopup(`<div style="font-family:sans-serif;font-size:12px;color:#e8e8f4;background:#13131f;padding:8px;border-radius:6px">
+      🔴 Live<br>${lat.toFixed(5)}, ${lon.toFixed(5)}<br>${accuracy?'±'+Math.round(accuracy)+'m':''}
+    </div>`).openPopup();
+  }
+
+  // Update main map marker too
+  if(liveVisitId&&mapMarkers[liveVisitId]){
+    mapMarkers[liveVisitId].setLatLng([lat,lon]);
+  }
+}
+
+function stopLiveTrack(){
+  if(liveSSE){liveSSE.close();liveSSE=null;}
+  document.getElementById('live-panel').classList.remove('active');
+  liveVisitId=null;
 }
 
 // ── ANALYTICS ─────────────────────────────────────────────────────────────────
 async function loadAnalytics(){
-  const s=await api('GET','/api/stats');
-  if(!s) return;
+  const s=await api('GET','/api/stats');if(!s)return;
   const rb=(items,el,key)=>{
     const max=items[0]?.count||1;
     document.getElementById(el).innerHTML=!items.length
-      ?'<p style="color:var(--muted);font-size:12px">No data yet.</p>'
+      ?'<p style="color:var(--muted);font-size:12px">No data.</p>'
       :items.map(i=>`<div class="bar-row">
           <div class="bar-label">${flag(i.country_code)||''} ${esc(i[key]||'?')}</div>
           <div class="bar-track"><div class="bar-fill" style="width:${Math.round(i.count/max*100)}%"></div></div>
@@ -842,8 +872,8 @@ async function loadAnalytics(){
 
 // ── AUTO REFRESH ──────────────────────────────────────────────────────────────
 setInterval(()=>{
-  if(document.getElementById('view-logs').classList.contains('active')) loadLogs();
-  if(document.getElementById('view-map').classList.contains('active'))  loadMap();
+  if(document.getElementById('view-logs').classList.contains('active'))loadLogs();
+  if(document.getElementById('view-map').classList.contains('active'))loadMap();
 },15000);
 
 // ── INIT ──────────────────────────────────────────────────────────────────────
@@ -853,7 +883,7 @@ setInterval(()=>{
       const res=await fetch('/api/me',{headers:{'x-auth-token':authToken}});
       if(res.ok){const d=await res.json();setUser(d.username);showApp();return;}
     }catch(e){}
-    authToken=''; localStorage.removeItem('tl_token');
+    authToken='';localStorage.removeItem('tl_token');
   }
 })();
 </script>
