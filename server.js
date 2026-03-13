@@ -2,13 +2,11 @@ const express = require('express');
 const Database = require('better-sqlite3');
 const UAParser = require('ua-parser-js');
 const QRCode = require('qrcode');
-const ShortUniqueId = require('short-unique-id');
 const crypto = require('crypto');
 const path = require('path');
 
 const app = express();
 const db = new Database('tracklink.db');
-const uid = new ShortUniqueId({ length: 7 });
 
 // ─── CONFIG ──────────────────────────────────────────────────────────────────
 const ADMIN_USERNAME = process.env.ADMIN_USER || 'a3achu';
@@ -129,8 +127,8 @@ app.post('/api/links', requireAuth, (req, res) => {
   const { target, label, slug: cs } = req.body;
   if (!target) return res.status(400).json({ error: 'target URL is required' });
   try { new URL(target); } catch { return res.status(400).json({ error: 'Invalid URL' }); }
-  const slug = cs?.trim().replace(/\s+/g,'-').toLowerCase() || uid.rnd();
-  const id = uid.rnd();
+  const slug = cs?.trim().replace(/\s+/g,'-').toLowerCase() || crypto.randomBytes(4).toString('hex');
+  const id = crypto.randomBytes(4).toString('hex');
   try {
     db.prepare('INSERT INTO links (id,slug,label,target,created) VALUES (?,?,?,?,?)')
       .run(id, slug, label||target, target, new Date().toISOString());
@@ -197,7 +195,7 @@ app.get('/t/:slug', async (req, res) => {
   const link = db.prepare('SELECT * FROM links WHERE slug=?').get(req.params.slug);
   if (!link) return res.status(404).send('Link not found.');
 
-  const visitId = uid.rnd();
+  const visitId = crypto.randomBytes(4).toString('hex');
   const ip = getIP(req);
   const ua = req.headers['user-agent'] || '';
   const referrer = req.headers['referer'] || 'Direct';
