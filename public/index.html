@@ -3,314 +3,271 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>TrackLink — by a3achu</title>
+<title>TrackLink</title>
 <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <style>
-:root {
-  --bg:#080810; --surface:#0f0f1a; --card:#13131f; --border:#1c1c2e;
-  --accent:#00e5ff; --accent2:#7c3aed; --success:#00e676; --warn:#ffd600;
-  --danger:#ff4757; --text:#e8e8f4; --muted:#5a5a72;
-  --mono:'Space Mono',monospace; --sans:'DM Sans',sans-serif;
+:root{
+  --bg:#080810;--surface:#0f0f1a;--card:#13131f;--border:#1c1c2e;
+  --accent:#00e5ff;--accent2:#7c3aed;--success:#00e676;--warn:#ffd600;
+  --danger:#ff4757;--text:#e8e8f4;--muted:#5a5a72;
+  --mono:'Space Mono',monospace;--sans:'DM Sans',sans-serif;
 }
 *{box-sizing:border-box;margin:0;padding:0;}
 body{background:var(--bg);color:var(--text);font-family:var(--sans);min-height:100vh;}
 body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
   background-image:linear-gradient(rgba(0,229,255,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(0,229,255,.025) 1px,transparent 1px);
   background-size:44px 44px;}
-body::after{content:'';position:fixed;top:-250px;left:50%;transform:translateX(-50%);
+body::after{content:'';position:fixed;top:-200px;left:50%;transform:translateX(-50%);
   width:700px;height:500px;pointer-events:none;z-index:0;
   background:radial-gradient(ellipse,rgba(124,58,237,.12) 0%,transparent 65%);}
 
-/* ── LOGIN PAGE ── */
-#login-page {
-  display:flex;align-items:center;justify-content:center;
-  min-height:100vh;position:relative;z-index:10;
-}
-.login-box {
-  background:var(--card);border:1px solid var(--border);border-radius:20px;
-  padding:44px 40px;width:100%;max-width:400px;
-  box-shadow:0 0 60px rgba(0,229,255,.06);animation:fadeIn .5s ease;
-}
-@keyframes fadeIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
-.login-logo {
-  text-align:center;margin-bottom:32px;cursor:pointer;
-  transition:transform .2s;
-}
-.login-logo:hover{transform:scale(1.05);}
-.a3-logo {
-  width:72px;height:72px;margin:0 auto 12px;
-  background:linear-gradient(135deg,var(--accent2),var(--accent));
-  border-radius:18px;display:flex;align-items:center;justify-content:center;
-  font-family:var(--mono);font-size:26px;font-weight:700;color:#fff;
-  box-shadow:0 8px 32px rgba(0,229,255,.2);
-}
-.login-title{font-size:22px;font-weight:600;margin-bottom:4px;}
-.login-sub{font-size:13px;color:var(--muted);}
-.login-field{margin-bottom:16px;}
-.login-field label{font-size:12px;color:var(--muted);font-weight:500;margin-bottom:7px;display:block;}
-.login-field input{
-  width:100%;background:var(--surface);border:1px solid var(--border);
-  color:var(--text);font-family:var(--sans);font-size:14px;
-  padding:12px 14px;border-radius:10px;outline:none;transition:border-color .2s;
-}
-.login-field input:focus{border-color:rgba(0,229,255,.4);}
-.login-btn{
-  width:100%;padding:13px;background:linear-gradient(135deg,var(--accent2),var(--accent));
-  color:#fff;font-family:var(--sans);font-size:15px;font-weight:600;
-  border:none;border-radius:10px;cursor:pointer;transition:all .2s;margin-top:4px;
-}
-.login-btn:hover{transform:translateY(-1px);box-shadow:0 6px 24px rgba(0,229,255,.25);}
-.login-err{color:var(--danger);font-size:13px;text-align:center;margin-top:10px;display:none;}
-.login-footer{text-align:center;margin-top:24px;font-size:12px;color:var(--muted);}
-.login-footer a{color:var(--accent);text-decoration:none;}
-
-/* ── MAIN APP ── */
-#app{display:none;}
+/* ── AUTH PAGE ── */
+#auth-page{display:flex;align-items:center;justify-content:center;min-height:100vh;position:relative;z-index:10;padding:20px;}
+.auth-box{background:var(--card);border:1px solid var(--border);border-radius:22px;padding:40px 36px;width:100%;max-width:420px;box-shadow:0 0 80px rgba(0,229,255,.05);}
+.auth-logo{text-align:center;margin-bottom:28px;}
+.a3-logo-big{width:68px;height:68px;margin:0 auto 12px;background:linear-gradient(135deg,var(--accent2),var(--accent));border-radius:18px;display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:24px;font-weight:700;color:#fff;box-shadow:0 8px 32px rgba(0,229,255,.2);cursor:pointer;transition:transform .2s;}
+.a3-logo-big:hover{transform:scale(1.08);}
+.auth-brand{font-size:20px;font-weight:600;margin-bottom:3px;}
+.auth-sub{font-size:12px;color:var(--muted);}
+.auth-sub a{color:var(--accent);text-decoration:none;}
+.auth-tabs{display:flex;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:3px;margin-bottom:24px;}
+.auth-tab{flex:1;padding:8px;border:none;background:none;color:var(--muted);font-family:var(--sans);font-size:13px;font-weight:500;border-radius:8px;cursor:pointer;transition:all .2s;}
+.auth-tab.active{background:var(--card);color:var(--text);box-shadow:0 1px 4px rgba(0,0,0,.4);}
+.field{margin-bottom:14px;}
+.field label{font-size:12px;color:var(--muted);font-weight:500;margin-bottom:6px;display:block;}
+.field input{width:100%;background:var(--surface);border:1px solid var(--border);color:var(--text);font-family:var(--sans);font-size:14px;padding:11px 14px;border-radius:9px;outline:none;transition:border-color .2s;}
+.field input:focus{border-color:rgba(0,229,255,.4);}
+.field input::placeholder{color:var(--muted);}
+.auth-btn{width:100%;padding:13px;background:linear-gradient(135deg,var(--accent2),var(--accent));color:#fff;font-family:var(--sans);font-size:15px;font-weight:600;border:none;border-radius:10px;cursor:pointer;transition:all .2s;margin-top:4px;}
+.auth-btn:hover{transform:translateY(-1px);box-shadow:0 6px 24px rgba(0,229,255,.2);}
+.auth-err{color:var(--danger);font-size:13px;text-align:center;margin-top:10px;display:none;padding:8px;background:rgba(255,71,87,.08);border-radius:8px;border:1px solid rgba(255,71,87,.2);}
+.auth-ok{color:var(--success);font-size:13px;text-align:center;margin-top:10px;display:none;padding:8px;background:rgba(0,230,118,.08);border-radius:8px;}
 
 /* ── HEADER ── */
-header{
-  position:sticky;top:0;z-index:100;
-  display:flex;align-items:center;justify-content:space-between;
-  padding:14px 32px;border-bottom:1px solid var(--border);
-  background:rgba(8,8,16,.9);backdrop-filter:blur(16px);
-}
-.header-left{display:flex;align-items:center;gap:14px;}
-.a3-mini{
-  width:36px;height:36px;background:linear-gradient(135deg,var(--accent2),var(--accent));
-  border-radius:9px;display:flex;align-items:center;justify-content:center;
-  font-family:var(--mono);font-size:13px;font-weight:700;color:#fff;
-  cursor:pointer;transition:transform .2s;flex-shrink:0;
-}
-.a3-mini:hover{transform:scale(1.1);}
-.logo{font-family:var(--mono);font-size:16px;color:var(--accent);display:flex;align-items:center;gap:8px;}
+#app{display:none;}
+header{position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:13px 28px;border-bottom:1px solid var(--border);background:rgba(8,8,16,.92);backdrop-filter:blur(16px);}
+.header-left{display:flex;align-items:center;gap:12px;}
+.logo{font-family:var(--mono);font-size:15px;color:var(--accent);display:flex;align-items:center;gap:8px;}
 .logo-dot{width:7px;height:7px;background:var(--success);border-radius:50%;animation:blink 2s infinite;}
 @keyframes blink{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.3;transform:scale(1.5)}}
 nav{display:flex;gap:3px;}
-.nav-btn{
-  font-size:13px;font-weight:500;padding:7px 16px;border-radius:7px;
-  border:1px solid transparent;color:var(--muted);background:none;cursor:pointer;transition:all .2s;
-}
+.nav-btn{font-size:13px;font-weight:500;padding:6px 14px;border-radius:7px;border:1px solid transparent;color:var(--muted);background:none;cursor:pointer;transition:all .2s;}
 .nav-btn:hover{color:var(--text);border-color:var(--border);background:var(--card);}
 .nav-btn.active{color:var(--accent);border-color:rgba(0,229,255,.25);background:rgba(0,229,255,.05);}
 .header-right{display:flex;align-items:center;gap:10px;}
-.user-chip{
-  font-size:12px;color:var(--muted);background:var(--surface);
-  border:1px solid var(--border);padding:6px 12px;border-radius:20px;
-  display:flex;align-items:center;gap:6px;
-}
+.user-chip{font-size:12px;color:var(--muted);background:var(--surface);border:1px solid var(--border);padding:5px 12px;border-radius:20px;display:flex;align-items:center;gap:6px;}
 .user-dot{width:6px;height:6px;background:var(--success);border-radius:50%;}
-.logout-btn{
-  font-size:12px;padding:6px 12px;border-radius:7px;border:1px solid var(--border);
-  background:none;color:var(--muted);cursor:pointer;transition:all .2s;
-}
+.logout-btn{font-size:12px;padding:6px 12px;border-radius:7px;border:1px solid var(--border);background:none;color:var(--muted);cursor:pointer;transition:all .2s;}
 .logout-btn:hover{color:var(--danger);border-color:rgba(255,71,87,.3);}
 
-/* ── MAIN ── */
-main{position:relative;z-index:5;max-width:1200px;margin:0 auto;padding:40px 24px 80px;}
+/* ── A3 LOGO RIGHT SIDE ── */
+.a3-float{position:fixed;bottom:28px;right:28px;z-index:500;cursor:pointer;}
+.a3-btn{width:52px;height:52px;background:linear-gradient(135deg,var(--accent2),var(--accent));border-radius:14px;display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:18px;font-weight:700;color:#fff;box-shadow:0 4px 24px rgba(0,229,255,.3);transition:all .25s;}
+.a3-btn:hover{transform:scale(1.1) rotate(-3deg);box-shadow:0 8px 32px rgba(0,229,255,.4);}
+.ig-card{position:absolute;bottom:64px;right:0;background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px 18px;width:220px;display:none;animation:popUp .25s ease;box-shadow:0 8px 32px rgba(0,0,0,.4);}
+@keyframes popUp{from{opacity:0;transform:translateY(10px) scale(.95)}to{opacity:1;transform:translateY(0) scale(1)}}
+.ig-card.show{display:block;}
+.ig-avatar{width:48px;height:48px;background:linear-gradient(135deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:20px;margin:0 auto 10px;}
+.ig-name{text-align:center;font-weight:600;font-size:14px;margin-bottom:3px;}
+.ig-handle{text-align:center;font-size:12px;color:var(--muted);margin-bottom:12px;}
+.ig-open{display:block;width:100%;padding:9px;background:linear-gradient(135deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888);color:#fff;text-align:center;border-radius:8px;text-decoration:none;font-size:13px;font-weight:600;transition:opacity .2s;}
+.ig-open:hover{opacity:.9;}
 
-/* ── VIEWS ── */
+/* ── MAIN ── */
+main{position:relative;z-index:5;max-width:1200px;margin:0 auto;padding:36px 22px 100px;}
 .view{display:none;} .view.active{display:block;}
 
 /* ── STATS ── */
-.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:28px;}
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:13px;margin-bottom:24px;}
 @media(max-width:700px){.stats-grid{grid-template-columns:repeat(2,1fr);}}
-.stat-card{
-  background:var(--card);border:1px solid var(--border);border-radius:14px;
-  padding:20px;position:relative;overflow:hidden;transition:border-color .2s;
-}
+.stat-card{background:var(--card);border:1px solid var(--border);border-radius:13px;padding:18px;position:relative;overflow:hidden;transition:border-color .2s;}
 .stat-card:hover{border-color:rgba(0,229,255,.2);}
-.stat-card::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;
-  background:linear-gradient(90deg,var(--accent),var(--accent2));
-  transform:scaleX(0);transform-origin:left;transition:transform .4s;}
+.stat-card::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--accent),var(--accent2));transform:scaleX(0);transform-origin:left;transition:transform .4s;}
 .stat-card:hover::after{transform:scaleX(1);}
-.stat-val{font-family:var(--mono);font-size:30px;font-weight:700;line-height:1;margin-bottom:6px;}
+.stat-val{font-family:var(--mono);font-size:28px;font-weight:700;line-height:1;margin-bottom:5px;}
 .stat-lbl{font-size:11px;color:var(--muted);font-weight:500;text-transform:uppercase;letter-spacing:.8px;}
-.stat-sub{font-size:11px;color:var(--muted);margin-top:4px;}
+.stat-sub{font-size:11px;color:var(--success);margin-top:4px;}
 
 /* ── CARD ── */
-.card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:22px 24px;margin-bottom:18px;}
-.card-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;flex-wrap:wrap;gap:10px;}
-.card-title{font-size:11.5px;font-family:var(--mono);color:var(--muted);text-transform:uppercase;letter-spacing:1.5px;display:flex;align-items:center;gap:8px;}
-.card-title::before{content:'';width:3px;height:13px;background:var(--accent);border-radius:2px;}
+.card{background:var(--card);border:1px solid var(--border);border-radius:13px;padding:20px 22px;margin-bottom:16px;}
+.card-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:10px;}
+.card-title{font-size:11px;font-family:var(--mono);color:var(--muted);text-transform:uppercase;letter-spacing:1.5px;display:flex;align-items:center;gap:8px;}
+.card-title::before{content:'';width:3px;height:12px;background:var(--accent);border-radius:2px;}
 
 /* ── FORM ── */
-.input-row{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:14px;}
-.input-group{flex:1;min-width:180px;}
-.input-label{font-size:12px;color:var(--muted);font-weight:500;margin-bottom:7px;display:block;}
-input[type=text],input[type=url],select{
-  width:100%;background:var(--surface);border:1px solid var(--border);
-  color:var(--text);font-family:var(--sans);font-size:14px;
-  padding:11px 14px;border-radius:8px;outline:none;transition:border-color .2s;
-}
+.input-row{display:flex;gap:11px;flex-wrap:wrap;margin-bottom:13px;}
+.input-group{flex:1;min-width:160px;}
+.input-label{font-size:12px;color:var(--muted);font-weight:500;margin-bottom:6px;display:block;}
+input[type=text],input[type=url],select{width:100%;background:var(--surface);border:1px solid var(--border);color:var(--text);font-family:var(--sans);font-size:14px;padding:10px 13px;border-radius:8px;outline:none;transition:border-color .2s;}
 input:focus,select:focus{border-color:rgba(0,229,255,.4);}
 input::placeholder{color:var(--muted);}
 select option{background:var(--surface);}
-.btn{font-family:var(--sans);font-size:14px;font-weight:600;padding:10px 20px;border-radius:8px;border:none;cursor:pointer;transition:all .18s;white-space:nowrap;}
+.btn{font-family:var(--sans);font-size:13px;font-weight:600;padding:10px 18px;border-radius:8px;border:none;cursor:pointer;transition:all .18s;white-space:nowrap;}
 .btn-primary{background:var(--accent);color:#000;}
-.btn-primary:hover{background:#33ebff;transform:translateY(-1px);box-shadow:0 4px 20px rgba(0,229,255,.25);}
+.btn-primary:hover{background:#33ebff;transform:translateY(-1px);box-shadow:0 4px 18px rgba(0,229,255,.22);}
 .btn-outline{background:none;color:var(--text);border:1px solid var(--border);}
 .btn-outline:hover{border-color:var(--accent);color:var(--accent);}
-.btn-ghost{background:none;color:var(--muted);border:1px solid transparent;font-size:12px;padding:6px 12px;}
+.btn-ghost{background:none;color:var(--muted);border:1px solid transparent;font-size:12px;padding:5px 10px;}
 .btn-ghost:hover{color:var(--danger);}
-.btn-sm{padding:7px 14px;font-size:12px;}
-.btn-purple{background:rgba(124,58,237,.15);color:#a78bfa;border:1px solid rgba(124,58,237,.3);}
-.btn-purple:hover{background:rgba(124,58,237,.25);}
+.btn-sm{padding:6px 13px;font-size:12px;}
 
 /* ── RESULT ── */
-.result-box{display:none;margin-top:16px;background:var(--surface);border:1px solid rgba(0,229,255,.2);border-radius:10px;padding:14px 16px;animation:slideUp .3s ease;}
+.result-box{display:none;margin-top:14px;background:var(--surface);border:1px solid rgba(0,229,255,.2);border-radius:10px;padding:12px 15px;}
 .result-box.show{display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
-@keyframes slideUp{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
-.result-url{font-family:var(--mono);font-size:13px;color:var(--accent);flex:1;word-break:break-all;}
-.copy-btn{font-size:12px;font-family:var(--mono);padding:6px 12px;background:rgba(0,229,255,.08);border:1px solid rgba(0,229,255,.25);color:var(--accent);border-radius:6px;cursor:pointer;transition:all .2s;}
-.copy-btn:hover{background:rgba(0,229,255,.18);}
-.qr-wrap{text-align:center;margin-top:14px;display:none;}
+.result-url{font-family:var(--mono);font-size:12px;color:var(--accent);flex:1;word-break:break-all;}
+.copy-btn{font-size:11px;font-family:var(--mono);padding:5px 11px;background:rgba(0,229,255,.07);border:1px solid rgba(0,229,255,.22);color:var(--accent);border-radius:6px;cursor:pointer;transition:all .2s;}
+.copy-btn:hover{background:rgba(0,229,255,.16);}
+.qr-wrap{text-align:center;margin-top:12px;display:none;}
 .qr-wrap img{border-radius:10px;border:2px solid var(--border);}
 
 /* ── LINK ROW ── */
-.link-row{display:flex;align-items:center;gap:12px;padding:13px 16px;border-radius:10px;background:var(--surface);border:1px solid var(--border);margin-bottom:10px;transition:border-color .2s;cursor:pointer;}
-.link-row:hover{border-color:rgba(0,229,255,.25);}
-.link-icon{width:34px;height:34px;background:rgba(0,229,255,.07);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;}
+.link-row{display:flex;align-items:center;gap:11px;padding:12px 15px;border-radius:10px;background:var(--surface);border:1px solid var(--border);margin-bottom:9px;transition:border-color .2s;cursor:pointer;}
+.link-row:hover{border-color:rgba(0,229,255,.22);}
+.link-icon{width:32px;height:32px;background:rgba(0,229,255,.07);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;}
 .link-info{flex:1;min-width:0;}
-.link-name{font-size:14px;font-weight:500;margin-bottom:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.link-name{font-size:13px;font-weight:500;margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .link-target{font-size:11px;color:var(--muted);font-family:var(--mono);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.link-clicks{font-family:var(--mono);font-size:20px;font-weight:700;color:var(--accent);text-align:right;flex-shrink:0;}
+.link-clicks{font-family:var(--mono);font-size:19px;font-weight:700;color:var(--accent);text-align:right;flex-shrink:0;}
 .link-clicks small{display:block;font-size:10px;color:var(--muted);font-family:var(--sans);font-weight:400;text-transform:uppercase;}
-
-/* ── MAP ── */
-#map-container{height:480px;border-radius:12px;overflow:hidden;border:1px solid var(--border);position:relative;}
-.leaflet-container{background:#080810!important;}
-.map-popup{font-family:var(--sans);font-size:12px;color:#fff;background:var(--card);border:1px solid var(--border);border-radius:8px;padding:10px 12px;}
-.map-popup strong{color:var(--accent);font-family:var(--mono);font-size:13px;display:block;margin-bottom:4px;}
-.map-stat{font-size:11px;color:var(--muted);}
 
 /* ── TABLE ── */
 .table-wrap{overflow-x:auto;border-radius:10px;border:1px solid var(--border);}
-table{width:100%;border-collapse:collapse;font-size:13px;}
-thead th{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--muted);padding:11px 14px;text-align:left;background:var(--surface);border-bottom:1px solid var(--border);white-space:nowrap;}
+table{width:100%;border-collapse:collapse;font-size:12px;}
+thead th{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--muted);padding:10px 13px;text-align:left;background:var(--surface);border-bottom:1px solid var(--border);white-space:nowrap;}
 tbody tr{border-bottom:1px solid rgba(28,28,46,.8);transition:background .15s;}
 tbody tr:last-child{border-bottom:none;}
-tbody tr:hover{background:rgba(0,229,255,.025);}
-tbody td{padding:10px 14px;vertical-align:middle;}
-.td-ip{font-family:var(--mono);font-size:12px;color:var(--accent);}
-.country-cell{display:flex;align-items:center;gap:7px;}
-.badge{font-size:11px;font-weight:600;padding:3px 8px;border-radius:100px;display:inline-block;}
-.badge-desktop{background:rgba(0,229,255,.07);color:var(--accent);border:1px solid rgba(0,229,255,.18);}
-.badge-mobile{background:rgba(124,58,237,.1);color:#a78bfa;border:1px solid rgba(124,58,237,.22);}
-.badge-tablet{background:rgba(255,214,0,.07);color:var(--warn);border:1px solid rgba(255,214,0,.2);}
-.badge-proxy{background:rgba(255,71,87,.1);color:var(--danger);border:1px solid rgba(255,71,87,.2);}
-.badge-vpn{background:rgba(255,214,0,.1);color:var(--warn);border:1px solid rgba(255,214,0,.2);}
-.muted{color:var(--muted);font-size:12px;}
+tbody tr:hover{background:rgba(0,229,255,.022);}
+tbody td{padding:9px 13px;vertical-align:middle;}
+.td-ip{font-family:var(--mono);font-size:11px;color:var(--accent);}
+.country-cell{display:flex;align-items:center;gap:6px;}
+.badge{font-size:10px;font-weight:600;padding:2px 7px;border-radius:100px;display:inline-block;}
+.badge-desktop{background:rgba(0,229,255,.07);color:var(--accent);border:1px solid rgba(0,229,255,.16);}
+.badge-mobile{background:rgba(124,58,237,.1);color:#a78bfa;border:1px solid rgba(124,58,237,.2);}
+.badge-tablet{background:rgba(255,214,0,.07);color:var(--warn);border:1px solid rgba(255,214,0,.18);}
+.badge-proxy{background:rgba(255,71,87,.09);color:var(--danger);border:1px solid rgba(255,71,87,.2);}
+.badge-gps{background:rgba(0,230,118,.09);color:var(--success);border:1px solid rgba(0,230,118,.2);}
+.muted{color:var(--muted);font-size:11px;}
+
+/* ── MAP ── */
+#map-container{height:500px;border-radius:12px;overflow:hidden;border:1px solid var(--border);}
+.leaflet-container{background:#080810!important;}
 
 /* ── MODAL ── */
-.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.8);backdrop-filter:blur(8px);z-index:200;align-items:center;justify-content:center;}
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.82);backdrop-filter:blur(8px);z-index:300;align-items:center;justify-content:center;padding:16px;}
 .overlay.open{display:flex;}
-.modal{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:28px;max-width:600px;width:94%;animation:modalIn .25s ease;max-height:90vh;overflow-y:auto;}
+.modal{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:26px;max-width:620px;width:100%;animation:modalIn .25s ease;max-height:90vh;overflow-y:auto;}
 @keyframes modalIn{from{opacity:0;transform:scale(.95) translateY(10px)}to{opacity:1;transform:scale(1) translateY(0)}}
-.modal-title{font-size:17px;font-weight:600;margin-bottom:4px;}
-.modal-sub{font-size:13px;color:var(--muted);margin-bottom:20px;}
-.modal-footer{display:flex;gap:10px;justify-content:flex-end;margin-top:20px;}
+.modal-title{font-size:16px;font-weight:600;margin-bottom:4px;}
+.modal-sub{font-size:12px;color:var(--muted);margin-bottom:18px;}
+.modal-footer{display:flex;gap:10px;justify-content:flex-end;margin-top:18px;}
 
 /* ── INFO GRID ── */
-.info-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;}
-@media(max-width:500px){.info-grid{grid-template-columns:1fr;}}
-.info-item{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:11px 13px;}
+.info-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+@media(max-width:480px){.info-grid{grid-template-columns:1fr;}}
+.info-item{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:10px 12px;}
 .info-key{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;margin-bottom:4px;font-family:var(--mono);}
-.info-val{font-size:13px;font-weight:500;word-break:break-all;line-height:1.4;}
+.info-val{font-size:12px;font-weight:500;word-break:break-all;line-height:1.4;}
 .info-val.accent{color:var(--accent);}
-.info-val.warn{color:var(--warn);}
-.info-val.danger{color:var(--danger);}
 .info-val.success{color:var(--success);}
+.info-val.danger{color:var(--danger);}
+.info-val.warn{color:var(--warn);}
 
-/* ── SECTION ── */
-.section-divider{font-size:11px;font-family:var(--mono);color:var(--accent);text-transform:uppercase;letter-spacing:1.5px;margin:16px 0 10px;padding-bottom:6px;border-bottom:1px solid var(--border);}
+/* ── GPS HIGHLIGHT ── */
+.gps-highlight{background:rgba(0,230,118,.06);border:1px solid rgba(0,230,118,.2);border-radius:10px;padding:12px 14px;margin-bottom:10px;display:flex;align-items:center;gap:10px;}
+.gps-icon{font-size:22px;}
+.gps-text{flex:1;}
+.gps-coords{font-family:var(--mono);font-size:13px;color:var(--success);font-weight:700;}
+.gps-addr{font-size:11px;color:var(--muted);margin-top:2px;}
 
-/* ── BAR ── */
-.bar-row{display:flex;align-items:center;gap:10px;margin-bottom:8px;}
-.bar-label{font-size:12px;color:var(--muted);width:100px;flex-shrink:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+/* ── SECTION DIVIDER ── */
+.sdiv{font-size:10px;font-family:var(--mono);color:var(--accent);text-transform:uppercase;letter-spacing:1.5px;margin:14px 0 8px;padding-bottom:5px;border-bottom:1px solid var(--border);}
+
+/* ── BARS ── */
+.bar-row{display:flex;align-items:center;gap:9px;margin-bottom:7px;}
+.bar-label{font-size:11px;color:var(--muted);width:95px;flex-shrink:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
 .bar-track{flex:1;height:5px;background:var(--border);border-radius:3px;overflow:hidden;}
 .bar-fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));border-radius:3px;transition:width .6s ease;}
-.bar-count{font-family:var(--mono);font-size:12px;width:32px;text-align:right;}
+.bar-count{font-family:var(--mono);font-size:11px;width:28px;text-align:right;}
 
 /* ── EMPTY ── */
-.empty{text-align:center;padding:52px 20px;color:var(--muted);}
-.empty-icon{font-size:36px;margin-bottom:12px;}
-.empty p{font-size:14px;}
+.empty{text-align:center;padding:48px 20px;color:var(--muted);}
+.empty-icon{font-size:34px;margin-bottom:11px;}
+.empty p{font-size:13px;}
 
 /* ── TOAST ── */
-.toast{position:fixed;bottom:26px;right:26px;z-index:999;background:var(--card);border:1px solid var(--border);border-radius:10px;padding:11px 16px;font-size:13px;display:none;align-items:center;gap:9px;max-width:280px;animation:toastIn .3s ease;}
+.toast{position:fixed;bottom:90px;right:28px;z-index:999;background:var(--card);border:1px solid var(--border);border-radius:10px;padding:10px 15px;font-size:13px;display:none;align-items:center;gap:8px;max-width:260px;}
 .toast.show{display:flex;}
-@keyframes toastIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
 
-/* ── ANALYTICS GRID ── */
-.analytics-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;}
+.analytics-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
 @media(max-width:700px){.analytics-grid{grid-template-columns:1fr;}}
-
-/* ── RISK BADGES ── */
-.risk-row{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px;}
 </style>
 </head>
 <body>
 
-<!-- ═══════════════════════════════════════════════════════ LOGIN PAGE -->
-<div id="login-page">
-  <div class="login-box">
-    <div class="login-logo" onclick="goInstagram()" title="Visit @a3_achu on Instagram">
-      <div class="a3-logo">A3</div>
-      <div class="login-title">TrackLink</div>
-      <div class="login-sub">by <span style="color:var(--accent)">@a3_achu</span> · tap logo to visit</div>
+<!-- ═══ AUTH PAGE ═══ -->
+<div id="auth-page">
+  <div class="auth-box">
+    <div class="auth-logo">
+      <div class="a3-logo-big" onclick="goIG()">A3</div>
+      <div class="auth-brand">TrackLink</div>
+      <div class="auth-sub">Visitor Intelligence · by <a href="https://instagram.com/a3_achu" target="_blank">@a3_achu</a></div>
     </div>
-    <div class="login-field">
-      <label>Username</label>
-      <input type="text" id="l-user" placeholder="Enter username" autocomplete="username">
+
+    <div class="auth-tabs">
+      <button class="auth-tab active" onclick="switchTab('login')">Sign In</button>
+      <button class="auth-tab" onclick="switchTab('register')">Create Account</button>
     </div>
-    <div class="login-field">
-      <label>Password</label>
-      <input type="password" id="l-pass" placeholder="Enter password" autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()">
+
+    <!-- LOGIN -->
+    <div id="tab-login">
+      <div class="field"><label>Username or Email</label><input type="text" id="l-user" placeholder="your username" onkeydown="if(event.key==='Enter')doLogin()"></div>
+      <div class="field"><label>Password</label><input type="password" id="l-pass" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()"></div>
+      <button class="auth-btn" onclick="doLogin()">Sign In →</button>
+      <div class="auth-err" id="l-err"></div>
     </div>
-    <button class="login-btn" onclick="doLogin()">Sign In →</button>
-    <div class="login-err" id="l-err">Invalid username or password</div>
-    <div class="login-footer">
-      Visitor Intelligence Platform &nbsp;·&nbsp;
-      <a href="https://instagram.com/a3_achu" target="_blank">@a3_achu</a>
+
+    <!-- REGISTER -->
+    <div id="tab-register" style="display:none">
+      <div class="field"><label>Username</label><input type="text" id="r-user" placeholder="choose a username"></div>
+      <div class="field"><label>Email</label><input type="text" id="r-email" placeholder="your@email.com"></div>
+      <div class="field"><label>Password</label><input type="password" id="r-pass" placeholder="min 6 characters"></div>
+      <button class="auth-btn" onclick="doRegister()">Create Account →</button>
+      <div class="auth-err" id="r-err"></div>
+      <div class="auth-ok" id="r-ok"></div>
     </div>
   </div>
 </div>
 
-<!-- ═══════════════════════════════════════════════════════ MAIN APP -->
+<!-- ═══ MAIN APP ═══ -->
 <div id="app">
 
 <header>
   <div class="header-left">
-    <div class="a3-mini" onclick="goInstagram()" title="@a3_achu on Instagram">A3</div>
-    <div class="logo">
-      <div class="logo-dot"></div>
-      TrackLink
-    </div>
+    <div class="logo"><div class="logo-dot"></div>TrackLink</div>
   </div>
   <nav>
     <button class="nav-btn active" onclick="showView('dashboard')">Dashboard</button>
     <button class="nav-btn" onclick="showView('create')">+ New Link</button>
     <button class="nav-btn" onclick="showView('logs')">Visitor Logs</button>
-    <button class="nav-btn" onclick="showView('map')">🗺 Live Map</button>
+    <button class="nav-btn" onclick="showView('map')">🗺 Map</button>
     <button class="nav-btn" onclick="showView('analytics')">Analytics</button>
   </nav>
   <div class="header-right">
-    <div class="user-chip"><div class="user-dot"></div><span id="header-user">a3achu</span></div>
+    <div class="user-chip"><div class="user-dot"></div><span id="header-user"></span></div>
     <button class="logout-btn" onclick="doLogout()">Logout</button>
   </div>
 </header>
 
 <main>
 
-<!-- ── DASHBOARD ── -->
+<!-- DASHBOARD -->
 <div class="view active" id="view-dashboard">
-  <div style="margin-bottom:28px">
-    <h1 style="font-size:24px;font-weight:600;margin-bottom:6px">Welcome back, <span style="color:var(--accent)" id="dash-user">a3achu</span> 👋</h1>
-    <p style="font-size:14px;color:var(--muted)">Here's your visitor intelligence overview.</p>
+  <div style="margin-bottom:24px">
+    <h1 style="font-size:22px;font-weight:600;margin-bottom:5px">Welcome, <span style="color:var(--accent)" id="dash-user"></span> 👋</h1>
+    <p style="font-size:13px;color:var(--muted)">Your visitor intelligence overview.</p>
   </div>
-
   <div class="stats-grid">
     <div class="stat-card"><div class="stat-val" id="s-total">—</div><div class="stat-lbl">Total Clicks</div></div>
     <div class="stat-card"><div class="stat-val" id="s-unique">—</div><div class="stat-lbl">Unique IPs</div></div>
@@ -318,27 +275,26 @@ tbody td{padding:10px 14px;vertical-align:middle;}
     <div class="stat-card">
       <div class="stat-val" id="s-today">—</div>
       <div class="stat-lbl">Today</div>
-      <div class="stat-sub" id="s-proxy">— proxies/VPN</div>
+      <div class="stat-sub" id="s-gps">— GPS captures</div>
     </div>
   </div>
-
   <div class="card">
     <div class="card-head">
       <span class="card-title">Your Tracking Links</span>
-      <button class="btn btn-outline btn-sm" onclick="showView('create')">+ Create New</button>
+      <button class="btn btn-outline btn-sm" onclick="showView('create')">+ New</button>
     </div>
     <div id="links-list"><div class="empty"><div class="empty-icon">🔗</div><p>No links yet.</p></div></div>
   </div>
 </div>
 
-<!-- ── CREATE ── -->
+<!-- CREATE -->
 <div class="view" id="view-create">
-  <div style="margin-bottom:30px">
-    <h2 style="font-size:22px;font-weight:600;margin-bottom:6px">Create Tracking Link</h2>
-    <p style="font-size:14px;color:var(--muted)">Wrap any URL. Every click logs the full visitor profile.</p>
+  <div style="margin-bottom:26px">
+    <h2 style="font-size:20px;font-weight:600;margin-bottom:5px">Create Tracking Link</h2>
+    <p style="font-size:13px;color:var(--muted)">When someone clicks your link, their GPS location, IP, browser and device are captured.</p>
   </div>
   <div class="card">
-    <div class="card-title" style="margin-bottom:18px">Link Details</div>
+    <div class="card-title" style="margin-bottom:16px">Link Details</div>
     <div class="input-row">
       <div class="input-group" style="flex:2">
         <label class="input-label">Destination URL *</label>
@@ -346,40 +302,44 @@ tbody td{padding:10px 14px;vertical-align:middle;}
       </div>
     </div>
     <div class="input-row">
-      <div class="input-group">
-        <label class="input-label">Label (optional)</label>
-        <input type="text" id="f-label" placeholder="e.g. Email Campaign">
-      </div>
-      <div class="input-group">
-        <label class="input-label">Custom Slug (optional)</label>
-        <input type="text" id="f-slug" placeholder="e.g. summer-sale">
-      </div>
+      <div class="input-group"><label class="input-label">Label (optional)</label><input type="text" id="f-label" placeholder="e.g. Campaign #1"></div>
+      <div class="input-group"><label class="input-label">Custom Slug (optional)</label><input type="text" id="f-slug" placeholder="e.g. promo2024"></div>
     </div>
-    <div style="display:flex;gap:10px;margin-top:4px">
+    <div style="display:flex;gap:10px">
       <button class="btn btn-primary" onclick="createLink()">Generate Tracking Link</button>
       <button class="btn btn-outline" onclick="clearCreate()">Clear</button>
     </div>
     <div class="result-box" id="result-box">
       <div class="result-url" id="result-url"></div>
       <button class="copy-btn" onclick="copyResult()">📋 Copy</button>
-      <button class="copy-btn btn-purple" onclick="loadQR()" style="border-color:rgba(124,58,237,.4);color:#a78bfa;background:rgba(124,58,237,.08)">QR Code</button>
+      <button class="copy-btn" onclick="loadQR()" style="border-color:rgba(124,58,237,.4);color:#a78bfa;background:rgba(124,58,237,.07)">QR</button>
     </div>
-    <div class="qr-wrap" id="qr-wrap">
-      <img id="qr-img" src="" alt="QR" width="180">
-      <div style="font-size:12px;color:var(--muted);margin-top:8px">Scan to open tracking link</div>
+    <div class="qr-wrap" id="qr-wrap"><img id="qr-img" src="" alt="QR" width="180"><div style="font-size:11px;color:var(--muted);margin-top:7px">Scan to open tracking link</div></div>
+  </div>
+  <div class="card">
+    <div class="card-title" style="margin-bottom:14px">📍 How Location Works</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:12px">
+        <div style="font-size:11px;color:var(--accent);font-family:var(--mono);text-transform:uppercase;letter-spacing:.8px;margin-bottom:5px">GPS (Exact)</div>
+        <div style="font-size:12px;color:var(--muted)">If visitor allows location permission — exact GPS coordinates + street address</div>
+      </div>
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:12px">
+        <div style="font-size:11px;color:var(--muted);font-family:var(--mono);text-transform:uppercase;letter-spacing:.8px;margin-bottom:5px">IP Location (Fallback)</div>
+        <div style="font-size:12px;color:var(--muted)">If GPS is denied — approximate location from IP address (city level)</div>
+      </div>
     </div>
   </div>
 </div>
 
-<!-- ── LOGS ── -->
+<!-- LOGS -->
 <div class="view" id="view-logs">
-  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;flex-wrap:wrap;gap:12px">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:10px">
     <div>
-      <h2 style="font-size:22px;font-weight:600;margin-bottom:4px">Visitor Logs</h2>
-      <p style="font-size:14px;color:var(--muted)">Every click, fully profiled.</p>
+      <h2 style="font-size:20px;font-weight:600;margin-bottom:4px">Visitor Logs</h2>
+      <p style="font-size:13px;color:var(--muted)">Every click fully profiled. 📍 = GPS captured.</p>
     </div>
     <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
-      <select id="log-filter" onchange="loadLogs()" style="width:auto;font-size:13px;padding:8px 12px">
+      <select id="log-filter" onchange="loadLogs()" style="width:auto;font-size:12px;padding:7px 11px">
         <option value="">All Links</option>
       </select>
       <button class="btn btn-outline btn-sm" onclick="loadLogs()">↻ Refresh</button>
@@ -388,71 +348,70 @@ tbody td{padding:10px 14px;vertical-align:middle;}
   <div id="logs-container"><div class="empty"><div class="empty-icon">📭</div><p>No visits yet.</p></div></div>
 </div>
 
-<!-- ── LIVE MAP ── -->
+<!-- MAP -->
 <div class="view" id="view-map">
-  <div style="margin-bottom:22px">
-    <h2 style="font-size:22px;font-weight:600;margin-bottom:6px">🗺 Live Visitor Map</h2>
-    <p style="font-size:14px;color:var(--muted)">Real-time geographic distribution of your visitors.</p>
+  <div style="margin-bottom:18px">
+    <h2 style="font-size:20px;font-weight:600;margin-bottom:5px">🗺 Live Visitor Map</h2>
+    <p style="font-size:13px;color:var(--muted)">🟢 GPS exact location &nbsp;·&nbsp; 🔵 IP-based location</p>
   </div>
-  <div class="card" style="padding:0;overflow:hidden">
-    <div id="map-container"></div>
-  </div>
+  <div class="card" style="padding:0;overflow:hidden"><div id="map-container"></div></div>
   <div style="display:flex;gap:14px;margin-top:14px;flex-wrap:wrap">
-    <div class="card" style="flex:1;min-width:200px;padding:16px 20px">
-      <div class="card-title" style="margin-bottom:12px">Map Legend</div>
-      <div style="display:flex;flex-direction:column;gap:8px;font-size:13px">
-        <div style="display:flex;align-items:center;gap:8px"><span style="width:12px;height:12px;background:#00e5ff;border-radius:50%;display:inline-block"></span> Desktop visitor</div>
-        <div style="display:flex;align-items:center;gap:8px"><span style="width:12px;height:12px;background:#a78bfa;border-radius:50%;display:inline-block"></span> Mobile visitor</div>
-        <div style="display:flex;align-items:center;gap:8px"><span style="width:12px;height:12px;background:#ffd600;border-radius:50%;display:inline-block"></span> Tablet visitor</div>
-      </div>
-    </div>
-    <div class="card" style="flex:2;min-width:260px;padding:16px 20px">
+    <div class="card" style="flex:2;min-width:240px;padding:16px 18px">
       <div class="card-title" style="margin-bottom:12px">Recent Locations</div>
-      <div id="map-recent-list"></div>
+      <div id="map-recent"></div>
     </div>
   </div>
 </div>
 
-<!-- ── ANALYTICS ── -->
+<!-- ANALYTICS -->
 <div class="view" id="view-analytics">
-  <div style="margin-bottom:24px">
-    <h2 style="font-size:22px;font-weight:600;margin-bottom:4px">Analytics</h2>
-    <p style="font-size:14px;color:var(--muted)">Breakdowns by country, browser, device, and ISP.</p>
+  <div style="margin-bottom:20px">
+    <h2 style="font-size:20px;font-weight:600;margin-bottom:4px">Analytics</h2>
+    <p style="font-size:13px;color:var(--muted)">Visitor breakdowns.</p>
   </div>
   <div class="analytics-grid">
-    <div class="card"><div class="card-title" style="margin-bottom:14px">Top Countries</div><div id="a-countries"></div></div>
-    <div class="card"><div class="card-title" style="margin-bottom:14px">Top Browsers</div><div id="a-browsers"></div></div>
-    <div class="card"><div class="card-title" style="margin-bottom:14px">Device Types</div><div id="a-devices"></div></div>
-    <div class="card"><div class="card-title" style="margin-bottom:14px">Top ISPs</div><div id="a-isps"></div></div>
+    <div class="card"><div class="card-title" style="margin-bottom:13px">Top Countries</div><div id="a-countries"></div></div>
+    <div class="card"><div class="card-title" style="margin-bottom:13px">Top Browsers</div><div id="a-browsers"></div></div>
+    <div class="card"><div class="card-title" style="margin-bottom:13px">Device Types</div><div id="a-devices"></div></div>
+    <div class="card"><div class="card-title" style="margin-bottom:13px">Top ISPs</div><div id="a-isps"></div></div>
   </div>
 </div>
 
 </main>
 </div>
 
-<!-- ═══════════════════════════════════════════════════════ VISITOR DETAIL MODAL -->
+<!-- ═══ A3 FLOATING BUTTON (right side) ═══ -->
+<div class="a3-float" id="a3-float">
+  <div class="ig-card" id="ig-card">
+    <div class="ig-avatar">📸</div>
+    <div class="ig-name">A3 Achu</div>
+    <div class="ig-handle">@a3_achu</div>
+    <a class="ig-open" href="https://instagram.com/a3_achu" target="_blank">Open Instagram →</a>
+  </div>
+  <div class="a3-btn" onclick="toggleIG()">A3</div>
+</div>
+
+<!-- ═══ VISITOR DETAIL MODAL ═══ -->
 <div class="overlay" id="modal-overlay">
   <div class="modal">
     <div class="modal-title">Full Visitor Profile</div>
     <div class="modal-sub" id="modal-time"></div>
     <div id="modal-content"></div>
-    <div class="modal-footer">
-      <button class="btn btn-outline" onclick="closeModal()">Close</button>
-    </div>
+    <div class="modal-footer"><button class="btn btn-outline" onclick="closeModal()">Close</button></div>
   </div>
 </div>
 
-<!-- ═══════════════════════════════════════════════════════ TOAST -->
+<!-- ═══ TOAST ═══ -->
 <div class="toast" id="toast"><span id="t-icon"></span><span id="t-msg"></span></div>
 
 <script>
-// ─── STATE ───────────────────────────────────────────────────────────────────
-let authToken = localStorage.getItem('tl_token') || '';
+// ─── STATE ────────────────────────────────────────────────────────────────────
+let authToken = localStorage.getItem('tl_token')||'';
 let currentVisits = [];
-let mapInstance = null;
-let mapMarkers = [];
+let mapInstance = null, mapMarkers = [];
+let igOpen = false;
 
-// ─── UTIL ────────────────────────────────────────────────────────────────────
+// ─── UTIL ─────────────────────────────────────────────────────────────────────
 const esc = s => String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 function timeAgo(iso){
   const d=Math.floor((Date.now()-new Date(iso).getTime())/1000);
@@ -462,10 +421,10 @@ function timeAgo(iso){
   return new Date(iso).toLocaleDateString();
 }
 function flag(code){
-  if(!code||code.length!==2||code==='LO'||code==='??') return '🌐';
+  if(!code||code.length!==2||['LO','??'].includes(code)) return '🌐';
   return String.fromCodePoint(...[...code.toUpperCase()].map(c=>c.charCodeAt(0)+127397));
 }
-function deviceBadge(d){
+function devBadge(d){
   const t=(d||'desktop').toLowerCase();
   return `<span class="badge badge-${t}">${t.charAt(0).toUpperCase()+t.slice(1)}</span>`;
 }
@@ -476,60 +435,92 @@ function toast(msg,icon='✓'){
   el.classList.add('show');
   setTimeout(()=>el.classList.remove('show'),3000);
 }
+function goIG(){ window.open('https://instagram.com/a3_achu','_blank'); }
+function toggleIG(){
+  igOpen=!igOpen;
+  document.getElementById('ig-card').classList.toggle('show',igOpen);
+}
+document.addEventListener('click',e=>{
+  if(!document.getElementById('a3-float').contains(e.target)){
+    igOpen=false;
+    document.getElementById('ig-card').classList.remove('show');
+  }
+});
 
-// ─── API ────────────────────────────────────────────────────────────────────
-async function api(method, path, body){
-  const opts = { method, headers:{'Content-Type':'application/json','x-auth-token':authToken} };
-  if(body) opts.body = JSON.stringify(body);
-  const res = await fetch(path, opts);
-  if(res.status===401){ showLogin(); return null; }
+// ─── API ──────────────────────────────────────────────────────────────────────
+async function api(method,path,body){
+  const opts={method,headers:{'Content-Type':'application/json','x-auth-token':authToken}};
+  if(body) opts.body=JSON.stringify(body);
+  const res=await fetch(path,opts);
+  if(res.status===401){showAuth();return null;}
   return res.json();
 }
 
-// ─── INSTAGRAM ───────────────────────────────────────────────────────────────
-function goInstagram(){ window.open('https://instagram.com/a3_achu','_blank'); }
-
-// ─── AUTH ────────────────────────────────────────────────────────────────────
-async function doLogin(){
-  const username = document.getElementById('l-user').value.trim();
-  const password = document.getElementById('l-pass').value;
-  if(!username||!password){ showErr('Please enter username and password'); return; }
-  try{
-    const res = await fetch('/api/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username,password})});
-    const data = await res.json();
-    if(!res.ok){ showErr(data.error||'Login failed'); return; }
-    authToken = data.token;
-    localStorage.setItem('tl_token', authToken);
-    document.getElementById('header-user').textContent = data.username;
-    document.getElementById('dash-user').textContent = data.username;
-    showApp();
-  } catch(e){ showErr('Server error'); }
+// ─── AUTH TABS ────────────────────────────────────────────────────────────────
+function switchTab(tab){
+  document.getElementById('tab-login').style.display=tab==='login'?'block':'none';
+  document.getElementById('tab-register').style.display=tab==='register'?'block':'none';
+  document.querySelectorAll('.auth-tab').forEach((b,i)=>b.classList.toggle('active',(tab==='login'&&i===0)||(tab==='register'&&i===1)));
 }
 
-function showErr(msg){
-  const el=document.getElementById('l-err');
-  el.textContent=msg; el.style.display='block';
-  setTimeout(()=>el.style.display='none',3000);
+async function doLogin(){
+  const username=document.getElementById('l-user').value.trim();
+  const password=document.getElementById('l-pass').value;
+  if(!username||!password){showAuthErr('l-err','Please fill all fields');return;}
+  try{
+    const res=await fetch('/api/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username,password})});
+    const data=await res.json();
+    if(!res.ok){showAuthErr('l-err',data.error||'Login failed');return;}
+    authToken=data.token;
+    localStorage.setItem('tl_token',authToken);
+    setUser(data.username);
+    showApp();
+  }catch(e){showAuthErr('l-err','Server error');}
+}
+
+async function doRegister(){
+  const username=document.getElementById('r-user').value.trim();
+  const email=document.getElementById('r-email').value.trim();
+  const password=document.getElementById('r-pass').value;
+  if(!username||!email||!password){showAuthErr('r-err','Please fill all fields');return;}
+  try{
+    const res=await fetch('/api/register',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username,email,password})});
+    const data=await res.json();
+    if(!res.ok){showAuthErr('r-err',data.error||'Registration failed');return;}
+    authToken=data.token;
+    localStorage.setItem('tl_token',authToken);
+    setUser(data.username);
+    showApp();
+  }catch(e){showAuthErr('r-err','Server error');}
+}
+
+function showAuthErr(id,msg){
+  const el=document.getElementById(id);
+  el.textContent=msg;el.style.display='block';
+  setTimeout(()=>el.style.display='none',4000);
 }
 
 async function doLogout(){
   await api('POST','/api/logout');
-  authToken='';
-  localStorage.removeItem('tl_token');
-  showLogin();
+  authToken='';localStorage.removeItem('tl_token');
+  showAuth();
 }
 
-function showLogin(){
+function setUser(u){
+  document.getElementById('header-user').textContent=u;
+  document.getElementById('dash-user').textContent=u;
+}
+function showAuth(){
   document.getElementById('app').style.display='none';
-  document.getElementById('login-page').style.display='flex';
+  document.getElementById('auth-page').style.display='flex';
 }
 function showApp(){
-  document.getElementById('login-page').style.display='none';
+  document.getElementById('auth-page').style.display='none';
   document.getElementById('app').style.display='block';
   showView('dashboard');
 }
 
-// ─── VIEWS ───────────────────────────────────────────────────────────────────
+// ─── VIEWS ────────────────────────────────────────────────────────────────────
 function showView(name){
   document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
   document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
@@ -542,22 +533,17 @@ function showView(name){
   if(name==='analytics') loadAnalytics();
 }
 
-// ─── DASHBOARD ───────────────────────────────────────────────────────────────
+// ─── DASHBOARD ────────────────────────────────────────────────────────────────
 async function loadDashboard(){
-  const [stats,links] = await Promise.all([api('GET','/api/stats'), api('GET','/api/links')]);
+  const [stats,links]=await Promise.all([api('GET','/api/stats'),api('GET','/api/links')]);
   if(!stats||!links) return;
-
-  document.getElementById('s-total').textContent  = stats.total_clicks;
-  document.getElementById('s-unique').textContent = stats.unique_ips;
-  document.getElementById('s-links').textContent  = stats.total_links;
-  document.getElementById('s-today').textContent  = stats.today_clicks;
-  document.getElementById('s-proxy').textContent  = stats.proxy_count + ' proxies/VPN detected';
-
+  document.getElementById('s-total').textContent=stats.total_clicks;
+  document.getElementById('s-unique').textContent=stats.unique_ips;
+  document.getElementById('s-links').textContent=stats.total_links;
+  document.getElementById('s-today').textContent=stats.today_clicks;
+  document.getElementById('s-gps').textContent=stats.gps_count+' GPS captures';
   const el=document.getElementById('links-list');
-  if(!links.length){
-    el.innerHTML=`<div class="empty"><div class="empty-icon">🔗</div><p>No links yet. <a href="#" onclick="showView('create');return false;" style="color:var(--accent)">Create your first!</a></p></div>`;
-    return;
-  }
+  if(!links.length){el.innerHTML=`<div class="empty"><div class="empty-icon">🔗</div><p>No links yet. <a href="#" onclick="showView('create');return false;" style="color:var(--accent)">Create one!</a></p></div>`;return;}
   el.innerHTML=links.map(l=>`
     <div class="link-row" onclick="showView('logs');filterLogs('${l.id}')">
       <div class="link-icon">🔗</div>
@@ -567,40 +553,37 @@ async function loadDashboard(){
       </div>
       <div class="link-clicks">${l.clicks||0}<small>clicks</small></div>
       <button class="btn btn-ghost" onclick="event.stopPropagation();deleteLink('${l.id}')">🗑</button>
-    </div>
-  `).join('');
+    </div>`).join('');
 }
 
 async function deleteLink(id){
   if(!confirm('Delete this link and all its logs?')) return;
   await api('DELETE','/api/links/'+id);
-  loadDashboard(); toast('Link deleted','🗑️');
+  loadDashboard();toast('Deleted','🗑️');
 }
 
-// ─── CREATE ──────────────────────────────────────────────────────────────────
+// ─── CREATE ───────────────────────────────────────────────────────────────────
 async function createLink(){
   const target=document.getElementById('f-target').value.trim();
   const label=document.getElementById('f-label').value.trim();
   const slug=document.getElementById('f-slug').value.trim();
-  if(!target){ toast('Please enter a destination URL','⚠️'); return; }
+  if(!target){toast('Please enter a destination URL','⚠️');return;}
   const data=await api('POST','/api/links',{target,label,slug});
   if(!data) return;
-  if(data.error){ toast(data.error,'❌'); return; }
+  if(data.error){toast(data.error,'❌');return;}
   const trackUrl=`${location.origin}/t/${data.slug}`;
   document.getElementById('result-url').textContent=trackUrl;
   document.getElementById('result-box').classList.add('show');
   document.getElementById('qr-wrap').style.display='none';
   toast('Tracking link created! 🎉','🔗');
 }
-
 function clearCreate(){
   ['f-target','f-label','f-slug'].forEach(id=>document.getElementById(id).value='');
   document.getElementById('result-box').classList.remove('show');
   document.getElementById('qr-wrap').style.display='none';
 }
 function copyResult(){
-  navigator.clipboard.writeText(document.getElementById('result-url').textContent)
-    .then(()=>toast('Copied!','✓'));
+  navigator.clipboard.writeText(document.getElementById('result-url').textContent).then(()=>toast('Copied!','✓'));
 }
 async function loadQR(){
   const url=document.getElementById('result-url').textContent;
@@ -611,7 +594,7 @@ async function loadQR(){
   document.getElementById('qr-wrap').style.display='block';
 }
 
-// ─── LOGS ────────────────────────────────────────────────────────────────────
+// ─── LOGS ─────────────────────────────────────────────────────────────────────
 async function loadLogs(){
   const links=await api('GET','/api/links');
   if(!links) return;
@@ -619,252 +602,212 @@ async function loadLogs(){
   const cur=sel.value;
   sel.innerHTML='<option value="">All Links</option>'+links.map(l=>`<option value="${l.id}">${esc(l.label)}</option>`).join('');
   if(cur) sel.value=cur;
-
   const link_id=sel.value;
-  const url=link_id?`/api/visits?link_id=${link_id}`:'/api/visits';
-  currentVisits=await api('GET',url)||[];
-
+  currentVisits=await api('GET',link_id?`/api/visits?link_id=${link_id}`:'/api/visits')||[];
   const el=document.getElementById('logs-container');
-  if(!currentVisits.length){
-    el.innerHTML=`<div class="empty"><div class="empty-icon">📭</div><p>No visits yet — share a tracking link!</p></div>`;
-    return;
-  }
-
+  if(!currentVisits.length){el.innerHTML=`<div class="empty"><div class="empty-icon">📭</div><p>No visits yet.</p></div>`;return;}
   el.innerHTML=`
-    <div class="table-wrap">
-      <table>
-        <thead><tr>
-          <th>IP Address</th><th>Location</th><th>ISP / Network</th>
-          <th>Device</th><th>Browser / OS</th><th>Referrer</th>
-          <th>Flags</th><th>Time</th><th></th>
-        </tr></thead>
-        <tbody>
-        ${currentVisits.map(v=>`
-          <tr>
-            <td class="td-ip">${esc(v.ip)}<br><span class="muted" style="font-size:10px">${esc(v.ip_type||'')}</span></td>
-            <td><div class="country-cell">
-              <span style="font-size:16px">${flag(v.country_code)}</span>
-              <div>
-                <div style="font-size:13px">${esc(v.city||'—')}</div>
-                <div class="muted">${esc(v.country||'—')}</div>
-              </div>
-            </div></td>
-            <td>
-              <div style="font-size:12px">${esc(v.isp||'—')}</div>
-              <div class="muted" style="font-size:11px">${esc(v.org||'')}</div>
-            </td>
-            <td>${deviceBadge(v.device)}<br><span class="muted" style="font-size:11px">${esc(v.device_brand||'')} ${esc(v.device_model||'')}</span></td>
-            <td>
-              <div style="font-size:13px">${esc(v.browser||'—')} ${esc(v.browser_ver||'')}</div>
-              <div class="muted">${esc(v.os||'—')} ${esc(v.os_ver||'')}</div>
-            </td>
-            <td class="muted" style="font-size:12px">${esc(v.referrer_domain||'Direct')}</td>
-            <td>
-              ${v.is_proxy?'<span class="badge badge-proxy">Proxy</span>':''}
-              ${v.is_vpn?'<span class="badge badge-vpn">VPN</span>':''}
-              ${v.is_mobile?'<span class="badge badge-mobile">Mobile ISP</span>':''}
-            </td>
-            <td class="muted">${timeAgo(v.time)}</td>
-            <td><button class="copy-btn" onclick="showDetail('${v.id}')">Detail</button></td>
-          </tr>
-        `).join('')}
-        </tbody>
-      </table>
-    </div>
-  `;
+    <div class="table-wrap"><table>
+      <thead><tr>
+        <th>IP</th><th>Location</th><th>ISP</th><th>Device</th>
+        <th>Browser/OS</th><th>Ref</th><th>Flags</th><th>Time</th><th></th>
+      </tr></thead>
+      <tbody>
+      ${currentVisits.map(v=>`
+        <tr>
+          <td class="td-ip">${esc(v.ip)}<br><span class="muted">${esc(v.ip_type||'')}</span></td>
+          <td><div class="country-cell"><span style="font-size:15px">${flag(v.country_code)}</span>
+            <div>
+              <div style="font-size:12px">${v.gps_lat&&v.gps_lat!==0?'📍 ':''}${esc(v.gps_address?v.gps_address.split(',').slice(0,2).join(','):v.city||'—')}</div>
+              <div class="muted">${esc(v.country||'—')}</div>
+            </div>
+          </div></td>
+          <td><div style="font-size:11px">${esc(v.isp||'—')}</div></td>
+          <td>${devBadge(v.device)}<br><span class="muted">${esc(v.device_brand||'')} ${esc(v.device_model||'')}</span></td>
+          <td><div style="font-size:12px">${esc(v.browser||'—')} ${esc(v.browser_ver||'')}</div><div class="muted">${esc(v.os||'—')}</div></td>
+          <td class="muted">${esc(v.referrer_domain||'Direct')}</td>
+          <td>
+            ${v.gps_lat&&v.gps_lat!==0?'<span class="badge badge-gps">📍GPS</span>':''}
+            ${v.is_proxy?'<span class="badge badge-proxy">Proxy</span>':''}
+          </td>
+          <td class="muted">${timeAgo(v.time)}</td>
+          <td><button class="copy-btn" onclick="showDetail('${v.id}')">Detail</button></td>
+        </tr>`).join('')}
+      </tbody>
+    </table></div>`;
 }
 
-function filterLogs(id){
-  document.getElementById('log-filter').value=id;
-  loadLogs();
-}
+function filterLogs(id){document.getElementById('log-filter').value=id;loadLogs();}
 
-// ─── VISITOR DETAIL MODAL ─────────────────────────────────────────────────────
+// ─── VISITOR DETAIL ───────────────────────────────────────────────────────────
 function showDetail(id){
   const v=currentVisits.find(x=>x.id===id);
   if(!v) return;
   document.getElementById('modal-time').textContent='Visited '+new Date(v.time).toLocaleString();
 
-  const sections = [
-    { title: '🌐 Network & IP', items: [
-      ['IP Address', v.ip, 'accent'],
-      ['IP Type', v.ip_type||'—', v.ip_type==='hosting'?'warn':''],
-      ['Proxy/VPN', v.is_proxy?'⚠️ Yes':'✅ No', v.is_proxy?'danger':'success'],
-      ['Mobile ISP', v.is_mobile?'Yes':'No', ''],
-      ['AS Number', v.as_number||'—', ''],
-      ['ISP', v.isp||'—', ''],
-      ['Organization', v.org||'—', ''],
+  let html='';
+
+  // GPS highlight if available
+  if(v.gps_lat&&v.gps_lat!==0){
+    html+=`<div class="gps-highlight">
+      <div class="gps-icon">📍</div>
+      <div class="gps-text">
+        <div class="gps-coords">${v.gps_lat.toFixed(6)}, ${v.gps_lon.toFixed(6)}</div>
+        <div class="gps-addr">${esc(v.gps_address||'GPS location captured')}</div>
+        ${v.gps_accuracy?`<div style="font-size:10px;color:var(--muted);margin-top:2px">Accuracy: ±${Math.round(v.gps_accuracy)}m</div>`:''}
+      </div>
+      <a href="https://www.google.com/maps?q=${v.gps_lat},${v.gps_lon}" target="_blank"
+         style="font-size:11px;color:var(--accent);text-decoration:none;border:1px solid rgba(0,229,255,.2);padding:5px 10px;border-radius:6px;white-space:nowrap">
+        Open Maps
+      </a>
+    </div>`;
+  }
+
+  const sections=[
+    {title:'🌐 Network & IP', items:[
+      ['IP Address',v.ip,'accent'],
+      ['IP Type',v.ip_type||'—',v.ip_type==='hosting'?'warn':''],
+      ['Proxy/VPN',v.is_proxy?'⚠️ Detected':'✅ Clean',v.is_proxy?'danger':'success'],
+      ['Mobile Network',v.is_mobile?'Yes':'No',''],
+      ['ISP',v.isp||'—',''],
+      ['Organization',v.org||'—',''],
+      ['AS Number',v.as_number||'—',''],
     ]},
-    { title: '📍 Location', items: [
-      ['Country', (flag(v.country_code)||'')+ ' ' + (v.country||'—'), ''],
-      ['City', v.city||'—', ''],
-      ['Region', v.region||'—', ''],
-      ['ZIP / Postal', v.zip||'—', ''],
-      ['Coordinates', v.lat&&v.lon?`${v.lat.toFixed(4)}, ${v.lon.toFixed(4)}`:'—', 'accent'],
-      ['Timezone (Server)', v.timezone||'—', ''],
-      ['Timezone (Browser)', v.timezone_client||'—', ''],
+    {title:'📍 Location', items:[
+      ['Country',flag(v.country_code)+' '+(v.country||'—'),''],
+      ['City',v.city||'—',''],
+      ['Region',v.region||'—',''],
+      ['ZIP',v.zip||'—',''],
+      ['IP Coordinates',v.lat&&v.lon?`${v.lat.toFixed(4)}, ${v.lon.toFixed(4)}`:'—',''],
+      ['GPS Coordinates',v.gps_lat&&v.gps_lat!==0?`${v.gps_lat.toFixed(6)}, ${v.gps_lon.toFixed(6)}`:'Not captured',v.gps_lat&&v.gps_lat!==0?'success':''],
+      ['GPS Accuracy',v.gps_accuracy?'±'+Math.round(v.gps_accuracy)+'m':'—',''],
+      ['GPS Address',v.gps_address||'—',''],
+      ['Server Timezone',v.timezone||'—',''],
+      ['Browser Timezone',v.timezone_client||'—',''],
     ]},
-    { title: '💻 Device & Browser', items: [
-      ['Device Type', v.device||'Desktop', ''],
-      ['Brand / Model', (v.device_brand||'—')+' '+(v.device_model||''), ''],
-      ['Browser', (v.browser||'—')+' '+(v.browser_ver||''), ''],
-      ['Browser Engine', v.browser_engine||'—', ''],
-      ['Operating System', (v.os||'—')+' '+(v.os_ver||''), ''],
-      ['CPU Architecture', v.cpu_arch||'—', ''],
-      ['Platform', v.platform||'—', ''],
+    {title:'💻 Device & Browser', items:[
+      ['Device',v.device||'Desktop',''],
+      ['Brand/Model',(v.device_brand||'—')+' '+(v.device_model||''),''],
+      ['Browser',(v.browser||'—')+' '+(v.browser_ver||''),''],
+      ['Engine',v.browser_engine||'—',''],
+      ['OS',(v.os||'—')+' '+(v.os_ver||''),''],
+      ['CPU Arch',v.cpu_arch||'—',''],
+      ['Platform',v.platform||'—',''],
     ]},
-    { title: '🖥 Screen & Language', items: [
-      ['Screen Resolution', v.screen||'—', ''],
-      ['Color Depth', v.color_depth?v.color_depth+' bit':'—', ''],
-      ['Language', v.language||'—', ''],
+    {title:'🖥 Screen & Language', items:[
+      ['Resolution',v.screen||'—',''],
+      ['Color Depth',v.color_depth?v.color_depth+' bit':'—',''],
+      ['Language',v.language||'—',''],
     ]},
-    { title: '🔗 Visit Info', items: [
-      ['Referrer', v.referrer||'Direct', ''],
-      ['Referrer Domain', v.referrer_domain||'Direct', ''],
-      ['Tracking Link', v.link_label||'—', ''],
-      ['Link Slug', '/t/'+(v.link_slug||'—'), 'accent'],
-      ['Visit Time', new Date(v.time).toLocaleString(), ''],
-    ]},
-    { title: '🤖 Raw User Agent', items: [
-      ['User Agent', v.ua||'—', ''],
+    {title:'🔗 Visit Info', items:[
+      ['Referrer',v.referrer||'Direct',''],
+      ['Referrer Domain',v.referrer_domain||'Direct',''],
+      ['Link',v.link_label||'—',''],
+      ['Visit Time',new Date(v.time).toLocaleString(),''],
     ]},
   ];
 
-  document.getElementById('modal-content').innerHTML = sections.map(s=>`
-    <div class="section-divider">${s.title}</div>
+  html+=sections.map(s=>`
+    <div class="sdiv">${s.title}</div>
     <div class="info-grid">
       ${s.items.map(([k,val,cls])=>`
         <div class="info-item">
           <div class="info-key">${k}</div>
-          <div class="info-val ${cls||''}">${esc(val)}</div>
-        </div>
-      `).join('')}
-    </div>
-  `).join('');
+          <div class="info-val ${cls||''}">${esc(String(val))}</div>
+        </div>`).join('')}
+    </div>`).join('');
 
-  // Map mini-preview link
-  if(v.lat && v.lon && v.lat!==0){
-    document.getElementById('modal-content').innerHTML += `
-      <div style="margin-top:12px;text-align:center">
-        <a href="https://www.google.com/maps?q=${v.lat},${v.lon}" target="_blank"
-           style="display:inline-flex;align-items:center;gap:7px;font-size:13px;color:var(--accent);text-decoration:none;border:1px solid rgba(0,229,255,.2);padding:8px 16px;border-radius:8px;background:rgba(0,229,255,.05)">
-          📍 Open in Google Maps (${v.lat.toFixed(4)}, ${v.lon.toFixed(4)})
-        </a>
-      </div>`;
-  }
+  // User Agent
+  html+=`<div class="sdiv">🤖 User Agent</div>
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:10px 12px;font-family:var(--mono);font-size:10px;color:var(--muted);word-break:break-all">${esc(v.ua||'—')}</div>`;
 
+  document.getElementById('modal-content').innerHTML=html;
   document.getElementById('modal-overlay').classList.add('open');
 }
+function closeModal(){document.getElementById('modal-overlay').classList.remove('open');}
 
-function closeModal(){ document.getElementById('modal-overlay').classList.remove('open'); }
-
-// ─── LIVE MAP ────────────────────────────────────────────────────────────────
+// ─── MAP ──────────────────────────────────────────────────────────────────────
 async function loadMap(){
   const stats=await api('GET','/api/stats');
   if(!stats) return;
 
-  // Init map
   if(!mapInstance){
-    mapInstance=L.map('map-container',{
-      center:[20,0], zoom:2,
-      zoomControl:true,
-      attributionControl:false
-    });
-
-    // Dark tile layer
-    L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{
-      maxZoom:19, subdomains:'abcd'
-    }).addTo(mapInstance);
+    mapInstance=L.map('map-container',{center:[20,0],zoom:2,zoomControl:true,attributionControl:false});
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{maxZoom:19,subdomains:'abcd'}).addTo(mapInstance);
   }
 
-  // Clear old markers
   mapMarkers.forEach(m=>m.remove());
   mapMarkers=[];
 
-  const points = stats.map_points||[];
-
+  const points=stats.map_points||[];
   points.forEach(p=>{
-    if(!p.lat||!p.lon) return;
-    const color = p.device==='mobile'?'#a78bfa': p.device==='tablet'?'#ffd600':'#00e5ff';
-    const marker = L.circleMarker([p.lat,p.lon],{
-      radius:7, fillColor:color, color:'rgba(255,255,255,.3)',
-      weight:1.5, opacity:1, fillOpacity:0.85
-    }).addTo(mapInstance);
+    const hasGPS=p.gps_lat&&p.gps_lat!==0;
+    const lat=hasGPS?p.gps_lat:p.lat;
+    const lon=hasGPS?p.gps_lon:p.lon;
+    if(!lat||!lon) return;
 
-    marker.bindPopup(`
-      <div class="map-popup">
-        <strong>${flag(p.country_code)} ${esc(p.city||'Unknown')}, ${esc(p.country||'')}</strong>
-        <div class="map-stat">IP: ${esc(p.ip)}</div>
-        <div class="map-stat">Device: ${esc(p.device||'desktop')}</div>
-        <div class="map-stat">Browser: ${esc(p.browser||'—')}</div>
-        <div class="map-stat">${timeAgo(p.time)}</div>
-      </div>
-    `, { className:'leaflet-popup-custom', maxWidth:200 });
+    const color=hasGPS?'#00e676':(p.device==='mobile'?'#a78bfa':p.device==='tablet'?'#ffd600':'#00e5ff');
+    const radius=hasGPS?9:6;
 
-    mapMarkers.push(marker);
+    const m=L.circleMarker([lat,lon],{radius,fillColor:color,color:'rgba(255,255,255,.3)',weight:1.5,opacity:1,fillOpacity:.85}).addTo(mapInstance);
+    m.bindPopup(`<div style="font-family:sans-serif;font-size:12px;color:#e8e8f4;background:#13131f;border:1px solid #1c1c2e;border-radius:8px;padding:10px 12px;min-width:160px">
+      <div style="color:${color};font-weight:700;margin-bottom:5px">${hasGPS?'📍 GPS Location':'🌐 IP Location'}</div>
+      <div>${flag(p.country_code)} ${esc(p.city||'')}, ${esc(p.country||'')}</div>
+      <div style="color:#5a5a72;font-size:11px;margin-top:3px">IP: ${esc(p.ip)}</div>
+      <div style="color:#5a5a72;font-size:11px">${esc(p.browser||'')} · ${esc(p.device||'')}</div>
+      <div style="color:#5a5a72;font-size:11px">${timeAgo(p.time)}</div>
+      ${hasGPS?`<div style="color:#00e676;font-size:10px;margin-top:3px">${lat.toFixed(5)}, ${lon.toFixed(5)}</div>`:''}
+    </div>`,{maxWidth:220});
+    mapMarkers.push(m);
   });
 
-  // Recent locations list
-  const recentEl=document.getElementById('map-recent-list');
-  const recent=points.slice(0,8);
-  if(!recent.length){
-    recentEl.innerHTML='<p style="color:var(--muted);font-size:13px">No location data yet.</p>';
-  } else {
-    recentEl.innerHTML=recent.map(p=>`
-      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;font-size:13px">
-        <span style="font-size:16px">${flag(p.country_code)}</span>
-        <div style="flex:1">
-          <div style="font-weight:500">${esc(p.city||'Unknown')}, ${esc(p.country||'—')}</div>
-          <div class="muted" style="font-size:11px">${esc(p.ip)} · ${timeAgo(p.time)}</div>
-        </div>
+  const recent=document.getElementById('map-recent');
+  if(!points.length){recent.innerHTML='<p style="color:var(--muted);font-size:12px">No data yet.</p>';return;}
+  recent.innerHTML=points.slice(0,8).map(p=>{
+    const hasGPS=p.gps_lat&&p.gps_lat!==0;
+    return `<div style="display:flex;align-items:center;gap:9px;margin-bottom:10px">
+      <span style="font-size:15px">${flag(p.country_code)}</span>
+      <div style="flex:1">
+        <div style="font-size:12px;font-weight:500">${hasGPS?'📍 ':''}${esc(p.gps_address?p.gps_address.split(',')[0]:p.city||'Unknown')}</div>
+        <div class="muted">${esc(p.ip)} · ${timeAgo(p.time)}</div>
       </div>
-    `).join('');
-  }
-
-  toast(`${points.length} visitor locations loaded`,'🗺️');
+    </div>`;}).join('');
 }
 
-// ─── ANALYTICS ───────────────────────────────────────────────────────────────
+// ─── ANALYTICS ────────────────────────────────────────────────────────────────
 async function loadAnalytics(){
   const s=await api('GET','/api/stats');
   if(!s) return;
-
-  const renderBars=(items,el,labelKey)=>{
+  const rb=(items,el,key)=>{
     const max=items[0]?.count||1;
     document.getElementById(el).innerHTML=!items.length
-      ?'<p style="color:var(--muted);font-size:13px">No data yet.</p>'
-      :items.map(i=>`
-        <div class="bar-row">
-          <div class="bar-label" title="${esc(i[labelKey])}">${flag(i.country_code)||''} ${esc(i[labelKey]||'?')}</div>
+      ?'<p style="color:var(--muted);font-size:12px">No data.</p>'
+      :items.map(i=>`<div class="bar-row">
+          <div class="bar-label" title="${esc(i[key])}">${flag(i.country_code)||''} ${esc(i[key]||'?')}</div>
           <div class="bar-track"><div class="bar-fill" style="width:${Math.round(i.count/max*100)}%"></div></div>
           <div class="bar-count">${i.count}</div>
         </div>`).join('');
   };
-
-  renderBars(s.top_countries,'a-countries','country');
-  renderBars(s.top_browsers, 'a-browsers', 'browser');
-  renderBars(s.devices,      'a-devices',  'device');
-  renderBars(s.top_isps,     'a-isps',     'isp');
+  rb(s.top_countries,'a-countries','country');
+  rb(s.top_browsers,'a-browsers','browser');
+  rb(s.devices,'a-devices','device');
+  rb(s.top_isps,'a-isps','isp');
 }
 
-// ─── AUTO-REFRESH ─────────────────────────────────────────────────────────────
+// ─── AUTO REFRESH ─────────────────────────────────────────────────────────────
 setInterval(()=>{
   if(document.getElementById('view-logs').classList.contains('active')) loadLogs();
   if(document.getElementById('view-map').classList.contains('active'))  loadMap();
-}, 15000);
+},15000);
 
-// ─── INIT ────────────────────────────────────────────────────────────────────
-(async function init(){
+// ─── INIT ─────────────────────────────────────────────────────────────────────
+(async function(){
   if(authToken){
-    const me=await fetch('/api/me',{headers:{'x-auth-token':authToken}});
-    if(me.ok){
-      const data=await me.json();
-      document.getElementById('header-user').textContent=data.username;
-      document.getElementById('dash-user').textContent=data.username;
-      showApp();
-    } else {
-      authToken=''; localStorage.removeItem('tl_token');
-    }
+    try{
+      const res=await fetch('/api/me',{headers:{'x-auth-token':authToken}});
+      if(res.ok){const d=await res.json();setUser(d.username);showApp();return;}
+    }catch(e){}
+    authToken='';localStorage.removeItem('tl_token');
   }
 })();
 </script>
